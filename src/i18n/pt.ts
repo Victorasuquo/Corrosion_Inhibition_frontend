@@ -15,6 +15,22 @@ export const pt: Translations = {
     results: 'Resultados',
     limits: 'Limites',
     language: 'Idioma',
+    home: 'Visão geral',
+    batch: 'Lote',
+    figures: 'Figuras',
+    cite: 'Citar',
+    history: 'Atividade',
+  },
+
+  pages: {
+    nextSteps: 'A seguir',
+    predictNextTitle: 'Para onde ir a seguir.',
+    cardBatch: 'Vai avaliar mais do que um candidato? Carregue um CSV e receba a série ordenada.',
+    cardLimits: 'Antes de agir sobre um número, leia onde este modelo deixa de funcionar.',
+    cardCite: 'Vai usar uma previsão num artigo ou relatório? Leve a citação e o bloco de reprodutibilidade.',
+    notFoundTitle: 'Não há leitura neste endereço.',
+    notFoundBody: 'Essa página não existe. O instrumento continua na bancada.',
+    backHome: 'Voltar à visão geral',
   },
 
   hero: {
@@ -282,6 +298,52 @@ export const pt: Translations = {
     unavailable: 'Serviço indisponível.',
     provenanceNote:
       'Cada artefacto é verificado contra um manifesto SHA-256 antes de o serviço arrancar. As citações dos conjuntos de dados ainda estão a ser rastreadas; os três conjuntos de origem são ligados em vez de redistribuídos.',
+  },
+
+  cite: {
+    eyebrow: 'Citação',
+    title: 'Como citar este trabalho.',
+    lead: 'Três coisas podem ser citadas aqui, e não são intercambiáveis: a investigação em si, o software que a serve e uma previsão concreta que dele obteve.',
+
+    thesisTitle: 'Citar a investigação',
+    thesisBody: 'Cite a tese quando se referir ao método, ao corpus ou ao resultado de que as condições experimentais transportam o sinal. Confirme o ano e o estado das provas antes de submeter: o ano abaixo é o corrente, não uma data de publicação verificada.',
+
+    softwareTitle: 'Citar o software',
+    softwareBody: 'Cite a ferramenta quando a tiver usado para produzir números. A versão importa: uma versão posterior do modelo daria respostas diferentes, por isso fixe aquela que realmente usou.',
+
+    reproTitle: 'Citar uma previsão',
+    reproBody: 'Esta é a parte habitualmente omitida. Uma previsão só é reprodutível se o leitor souber que artefacto a produziu, por isso este bloco traz a versão do modelo em serviço, o seu SHA-256 e as versões fixadas das bibliotecas. Cole-o na sua secção de métodos.',
+    methodsParagraph: 'Parágrafo de métodos',
+
+    copy: 'Copiar',
+    copied: 'Copiado',
+
+    dataEyebrow: 'Dados',
+    dataTitle: 'Citar os conjuntos de dados de origem.',
+    dataBody: 'O corpus foi harmonizado a partir de três conjuntos de dados públicos. Pertencem aos seus autores originais e são aqui ligados em vez de redistribuídos.',
+    dataGapTitle: 'Referências ainda a rastrear',
+    dataGapBody: 'As publicações originais destes três conjuntos ainda não foram confirmadas, pelo que não se imprime aqui qualquer referência, em vez de imprimir uma que possa estar errada. Se usar o corpus, rastreie cada conjunto até à sua publicação de origem e cite-a diretamente.',
+    dsInhibitor: '1364 entradas de aço-carbono em HCl 1 M, com descritores quânticos.',
+    dsDatacor: '2011 medições em dezassete substratos de alumínio, com condições por linha.',
+    dsExcorr: '4616 entradas abrangendo ferro, alumínio, magnésio, cobre e zinco.',
+    citationPending: 'Referência pendente',
+
+    licenceEyebrow: 'Termos',
+    licenceTitle: 'Licença e contacto.',
+    licenceBody: 'O código é aberto. Os conjuntos de dados mantêm as suas licenças originais e não são redistribuídos.',
+    codeLicence: 'Licença do código',
+    contact: 'Contacto',
+  },
+
+  history: {
+    eyebrow: 'Atividade',
+    title: 'O que foi pedido a este serviço.',
+    lead: 'Cada previsão é registada com a versão do modelo que a produziu, para que qualquer resultado possa ser rastreado até um artefacto exato. Apenas a molécula canónica é mostrada.',
+    emptyTitle: 'Ainda nada registado',
+    emptyBody: 'As previsões aparecem aqui assim que o serviço tiver servido algumas. Faça uma e volte.',
+    tableCaption: 'Previsões servidas recentemente, as mais recentes primeiro.',
+    colWhen: 'Quando',
+    rows: 'entradas',
   },
 
   metals: {

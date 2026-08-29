@@ -15,6 +15,22 @@ export const zh: Translations = {
     results: '结果',
     limits: '局限',
     language: '语言',
+    home: '总览',
+    batch: '批量',
+    figures: '图表',
+    cite: '引用',
+    history: '活动',
+  },
+
+  pages: {
+    nextSteps: '下一步',
+    predictNextTitle: '接下来去哪里。',
+    cardBatch: '要评估多个候选物？上传 CSV，即可获得排序后的系列结果。',
+    cardLimits: '在依据某个数值行动之前，请先了解这个模型在哪里失效。',
+    cardCite: '要在论文或报告中使用预测结果？请取用引用格式与可复现性说明段落。',
+    notFoundTitle: '此地址没有读数。',
+    notFoundBody: '该页面不存在。仪器仍在实验台上。',
+    backHome: '返回总览',
   },
 
   hero: {
@@ -278,6 +294,52 @@ export const zh: Translations = {
     unavailable: '服务不可用。',
     provenanceNote:
       '服务启动前，每个产物都会对照 SHA-256 清单校验。数据集引用仍在追溯之中；三套源数据集以链接形式给出，而非再分发。',
+  },
+
+  cite: {
+    eyebrow: '引用',
+    title: '如何引用这项工作。',
+    lead: '这里有三样东西可以引用，且彼此不可替换：研究本身、承载它的软件，以及你从中获得的某一次具体预测。',
+
+    thesisTitle: '引用研究',
+    thesisBody: '当你提及方法、语料，或「实验条件承载了信号」这一结论时，请引用学位论文。投稿前请确认年份与答辩状态——下方给出的是当前年份，并非经核实的出版日期。',
+
+    softwareTitle: '引用软件',
+    softwareBody: '当你用它产出数值时，请引用该工具。版本很重要：更晚的模型版本会给出不同答案，因此请锁定你实际使用的那一个。',
+
+    reproTitle: '引用一次预测',
+    reproBody: '这是通常被略去的部分。只有当读者知道是哪个产物生成了它，预测才是可复现的。因此这段文本包含在线模型版本、其 SHA-256 以及锁定的库版本。请粘贴到你的方法部分。',
+    methodsParagraph: '方法段落',
+
+    copy: '复制',
+    copied: '已复制',
+
+    dataEyebrow: '数据',
+    dataTitle: '引用源数据集。',
+    dataBody: '语料由三套公开数据集统一而来。它们归原作者所有，此处以链接给出，而非再分发。',
+    dataGapTitle: '引用仍在追溯中',
+    dataGapBody: '这三套数据集的原始出版物尚未确认，因此此处不印出任何参考文献，以免印出可能有误的一条。若你使用该语料，请将每套数据集追溯至其源出版物并直接引用。',
+    dsInhibitor: '1364 条碳钢在 1 M HCl 中的记录，附量子化学描述符。',
+    dsDatacor: '涵盖十七种铝基体的 2011 条测量，逐行记录实验条件。',
+    dsExcorr: '4616 条记录，涵盖铁、铝、镁、铜与锌。',
+    citationPending: '参考文献待补',
+
+    licenceEyebrow: '条款',
+    licenceTitle: '许可与联系方式。',
+    licenceBody: '代码是开放的。数据集保留其原有许可，且不在此再分发。',
+    codeLicence: '代码许可',
+    contact: '联系方式',
+  },
+
+  history: {
+    eyebrow: '活动',
+    title: '这个服务被问过什么。',
+    lead: '每次预测都会连同生成它的模型版本一起记录，因此任何结果都可以追溯到确切的产物。此处仅显示规范化后的分子。',
+    emptyTitle: '暂无记录',
+    emptyBody: '服务处理过预测后，记录就会出现在这里。先做一次预测再回来看看。',
+    tableCaption: '近期服务的预测，最新在前。',
+    colWhen: '时间',
+    rows: '条记录',
   },
 
   metals: {

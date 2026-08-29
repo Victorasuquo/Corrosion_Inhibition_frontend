@@ -15,6 +15,22 @@ export const es: Translations = {
     results: 'Resultados',
     limits: 'Límites',
     language: 'Idioma',
+    home: 'Resumen',
+    batch: 'Lote',
+    figures: 'Figuras',
+    cite: 'Citar',
+    history: 'Actividad',
+  },
+
+  pages: {
+    nextSteps: 'Siguiente',
+    predictNextTitle: 'Adónde ir ahora.',
+    cardBatch: '¿Vas a evaluar más de un candidato? Sube un CSV y recibe la serie ordenada.',
+    cardLimits: 'Antes de actuar sobre una cifra, lee dónde deja de funcionar este modelo.',
+    cardCite: '¿Vas a usar una predicción en un artículo o informe? Toma la cita y el bloque de reproducibilidad.',
+    notFoundTitle: 'No hay lectura en esta dirección.',
+    notFoundBody: 'Esa página no existe. El instrumento sigue en la mesa de trabajo.',
+    backHome: 'Volver al resumen',
   },
 
   hero: {
@@ -282,6 +298,52 @@ export const es: Translations = {
     unavailable: 'Servicio no disponible.',
     provenanceNote:
       'Cada artefacto se verifica contra un manifiesto SHA-256 antes de que el servicio arranque. Las citas de los conjuntos de datos aún se están rastreando; los tres conjuntos fuente se enlazan en lugar de redistribuirse.',
+  },
+
+  cite: {
+    eyebrow: 'Cita',
+    title: 'Cómo citar este trabajo.',
+    lead: 'Aquí se pueden citar tres cosas, y no son intercambiables: la investigación en sí, el software que la sirve y una predicción concreta que hayas obtenido de él.',
+
+    thesisTitle: 'Citar la investigación',
+    thesisBody: 'Cita la tesis cuando te refieras al método, al corpus o al hallazgo de que las condiciones experimentales portan la señal. Confirma el año y el estado de defensa antes de enviar: el año que aparece abajo es el actual, no una fecha de publicación verificada.',
+
+    softwareTitle: 'Citar el software',
+    softwareBody: 'Cita la herramienta cuando la hayas usado para producir cifras. La versión importa: una versión posterior del modelo daría respuestas distintas, así que fija la que realmente usaste.',
+
+    reproTitle: 'Citar una predicción',
+    reproBody: 'Esta es la parte que suele omitirse. Una predicción solo es reproducible si el lector sabe qué artefacto la produjo, así que este bloque lleva la versión del modelo en servicio, su SHA-256 y las versiones fijadas de las bibliotecas. Pégalo en tu sección de métodos.',
+    methodsParagraph: 'Párrafo de métodos',
+
+    copy: 'Copiar',
+    copied: 'Copiado',
+
+    dataEyebrow: 'Datos',
+    dataTitle: 'Citar los conjuntos de datos fuente.',
+    dataBody: 'El corpus se armonizó a partir de tres conjuntos de datos públicos. Pertenecen a sus autores originales y aquí se enlazan en lugar de redistribuirse.',
+    dataGapTitle: 'Referencias aún en rastreo',
+    dataGapBody: 'Las publicaciones originales de estos tres conjuntos aún no se han confirmado, así que no se imprime ninguna referencia aquí en lugar de imprimir una que podría ser errónea. Si usas el corpus, rastrea cada conjunto hasta su publicación fuente y cítala directamente.',
+    dsInhibitor: '1364 entradas de acero al carbono en HCl 1 M, con descriptores cuánticos.',
+    dsDatacor: '2011 mediciones en diecisiete sustratos de aluminio, con condiciones por fila.',
+    dsExcorr: '4616 entradas que abarcan hierro, aluminio, magnesio, cobre y cinc.',
+    citationPending: 'Referencia pendiente',
+
+    licenceEyebrow: 'Términos',
+    licenceTitle: 'Licencia y contacto.',
+    licenceBody: 'El código es abierto. Los conjuntos de datos conservan sus licencias originales y no se redistribuyen.',
+    codeLicence: 'Licencia del código',
+    contact: 'Contacto',
+  },
+
+  history: {
+    eyebrow: 'Actividad',
+    title: 'Qué se le ha pedido a este servicio.',
+    lead: 'Cada predicción se registra con la versión del modelo que la produjo, de modo que cualquier resultado puede rastrearse hasta un artefacto exacto. Solo se muestra la molécula canónica.',
+    emptyTitle: 'Aún no hay registros',
+    emptyBody: 'Las predicciones aparecerán aquí en cuanto el servicio haya atendido alguna. Haz una y vuelve.',
+    tableCaption: 'Predicciones servidas recientemente, las más nuevas primero.',
+    colWhen: 'Cuándo',
+    rows: 'entradas',
   },
 
   metals: {

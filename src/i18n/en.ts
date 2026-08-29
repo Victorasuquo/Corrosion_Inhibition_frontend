@@ -20,6 +20,22 @@ export const en = {
     results: 'Results',
     limits: 'Limits',
     language: 'Language',
+    home: 'Overview',
+    batch: 'Batch',
+    figures: 'Figures',
+    cite: 'Cite',
+    history: 'Activity',
+  },
+
+  pages: {
+    nextSteps: 'Next',
+    predictNextTitle: 'Where to go from here.',
+    cardBatch: 'Screening more than one candidate? Upload a CSV and get the series back ranked.',
+    cardLimits: 'Before you act on a number, read where this model stops working.',
+    cardCite: 'Using a prediction in a paper or report? Take the citation and the reproducibility block.',
+    notFoundTitle: 'No reading at this address.',
+    notFoundBody: 'That page does not exist. The instrument is still on the bench.',
+    backHome: 'Back to the overview',
   },
 
   hero: {
@@ -285,6 +301,52 @@ export const en = {
     unavailable: 'Service unavailable.',
     provenanceNote:
       'Every artefact is verified against a SHA-256 manifest before the service will start. Dataset citations are still being traced; the three source datasets are linked to rather than redistributed.',
+  },
+
+  cite: {
+    eyebrow: 'Citation',
+    title: 'How to cite this work.',
+    lead: 'Three things can be cited here, and they are not interchangeable: the research itself, the software that serves it, and a specific prediction you obtained from it.',
+
+    thesisTitle: 'Citing the research',
+    thesisBody: 'Cite the thesis when you are referring to the method, the corpus, or the finding that experimental conditions carry the signal. Confirm the year and award status before submitting — the year below is the current one, not a verified publication date.',
+
+    softwareTitle: 'Citing the software',
+    softwareBody: 'Cite the tool when you used it to produce numbers. The version matters: a later model version would give different answers, so pin the one you actually used.',
+
+    reproTitle: 'Citing a prediction',
+    reproBody: 'This is the part usually left out. A prediction is only reproducible if the reader knows which artefact produced it, so this block carries the live model version, its SHA-256 and the pinned library versions. Paste it into your methods section.',
+    methodsParagraph: 'Methods paragraph',
+
+    copy: 'Copy',
+    copied: 'Copied',
+
+    dataEyebrow: 'Data',
+    dataTitle: 'Citing the source datasets.',
+    dataBody: 'The corpus was harmonised from three public datasets. They belong to their original authors and are linked to rather than redistributed here.',
+    dataGapTitle: 'Citations still being traced',
+    dataGapBody: 'The original publications for these three datasets have not yet been confirmed, so no reference is printed here rather than printing one that might be wrong. If you use the corpus, trace each dataset to its source publication and cite that directly.',
+    dsInhibitor: '1,364 entries for carbon steel in 1 M HCl, with quantum-chemical descriptors.',
+    dsDatacor: '2,011 measurements across seventeen aluminium substrates, with per-row conditions.',
+    dsExcorr: '4,616 entries spanning iron, aluminium, magnesium, copper and zinc.',
+    citationPending: 'Reference pending',
+
+    licenceEyebrow: 'Terms',
+    licenceTitle: 'Licence and contact.',
+    licenceBody: 'The code is open. The datasets retain their original licences and are not redistributed.',
+    codeLicence: 'Code licence',
+    contact: 'Contact',
+  },
+
+  history: {
+    eyebrow: 'Activity',
+    title: 'What this service has been asked.',
+    lead: 'Every prediction is logged with the model version that produced it, so any result can be traced back to an exact artefact. Only the canonical molecule is shown.',
+    emptyTitle: 'Nothing logged yet',
+    emptyBody: 'Predictions appear here once the service has served some. Make one and come back.',
+    tableCaption: 'Recently served predictions, newest first.',
+    colWhen: 'When',
+    rows: 'entries',
   },
 
   metals: {

@@ -15,6 +15,22 @@ export const fr: Translations = {
     results: 'Résultats',
     limits: 'Limites',
     language: 'Langue',
+    home: 'Aperçu',
+    batch: 'Lot',
+    figures: 'Figures',
+    cite: 'Citer',
+    history: 'Activité',
+  },
+
+  pages: {
+    nextSteps: 'Suite',
+    predictNextTitle: 'Où aller ensuite.',
+    cardBatch: 'Plusieurs candidats à évaluer ? Téléversez un CSV et récupérez la série classée.',
+    cardLimits: 'Avant d’agir sur un chiffre, lisez où ce modèle cesse de fonctionner.',
+    cardCite: 'Vous utilisez une prédiction dans un article ou un rapport ? Prenez la citation et le bloc de reproductibilité.',
+    notFoundTitle: 'Aucune lecture à cette adresse.',
+    notFoundBody: 'Cette page n’existe pas. L’instrument est toujours sur la paillasse.',
+    backHome: 'Retour à l’aperçu',
   },
 
   hero: {
@@ -282,6 +298,52 @@ export const fr: Translations = {
     unavailable: 'Service indisponible.',
     provenanceNote:
       'Chaque artefact est vérifié par rapport à un manifeste SHA-256 avant le démarrage du service. Les citations des jeux de données sont en cours de recherche ; les trois jeux source sont liés plutôt que redistribués.',
+  },
+
+  cite: {
+    eyebrow: 'Citation',
+    title: 'Comment citer ce travail.',
+    lead: 'Trois éléments peuvent être cités ici, et ils ne sont pas interchangeables : la recherche elle-même, le logiciel qui la sert, et une prédiction précise que vous en avez obtenue.',
+
+    thesisTitle: 'Citer la recherche',
+    thesisBody: 'Citez la thèse lorsque vous renvoyez à la méthode, au corpus ou au résultat selon lequel les conditions expérimentales portent le signal. Vérifiez l’année et le statut de soutenance avant soumission : l’année ci-dessous est l’année courante, non une date de publication vérifiée.',
+
+    softwareTitle: 'Citer le logiciel',
+    softwareBody: 'Citez l’outil lorsque vous l’avez utilisé pour produire des chiffres. La version compte : une version ultérieure du modèle donnerait d’autres réponses, alors fixez celle que vous avez réellement utilisée.',
+
+    reproTitle: 'Citer une prédiction',
+    reproBody: 'C’est la partie généralement omise. Une prédiction n’est reproductible que si le lecteur sait quel artefact l’a produite : ce bloc porte donc la version du modèle en service, son SHA-256 et les versions figées des bibliothèques. Collez-le dans votre section méthodes.',
+    methodsParagraph: 'Paragraphe de méthodes',
+
+    copy: 'Copier',
+    copied: 'Copié',
+
+    dataEyebrow: 'Données',
+    dataTitle: 'Citer les jeux de données source.',
+    dataBody: 'Le corpus a été harmonisé à partir de trois jeux de données publics. Ils appartiennent à leurs auteurs d’origine et sont liés plutôt que redistribués ici.',
+    dataGapTitle: 'Références en cours de recherche',
+    dataGapBody: 'Les publications d’origine de ces trois jeux de données n’ont pas encore été confirmées ; aucune référence n’est donc imprimée ici, plutôt que d’en imprimer une qui serait peut-être fausse. Si vous utilisez le corpus, remontez à la publication source de chaque jeu et citez-la directement.',
+    dsInhibitor: '1 364 entrées pour l’acier au carbone dans HCl 1 M, avec descripteurs quantiques.',
+    dsDatacor: '2 011 mesures sur dix-sept substrats d’aluminium, avec conditions par ligne.',
+    dsExcorr: '4 616 entrées couvrant le fer, l’aluminium, le magnésium, le cuivre et le zinc.',
+    citationPending: 'Référence à venir',
+
+    licenceEyebrow: 'Conditions',
+    licenceTitle: 'Licence et contact.',
+    licenceBody: 'Le code est ouvert. Les jeux de données conservent leurs licences d’origine et ne sont pas redistribués.',
+    codeLicence: 'Licence du code',
+    contact: 'Contact',
+  },
+
+  history: {
+    eyebrow: 'Activité',
+    title: 'Ce qui a été demandé à ce service.',
+    lead: 'Chaque prédiction est journalisée avec la version du modèle qui l’a produite, de sorte que tout résultat peut être rattaché à un artefact précis. Seule la molécule canonique est affichée.',
+    emptyTitle: 'Rien de journalisé pour l’instant',
+    emptyBody: 'Les prédictions apparaîtront ici dès que le service en aura servi. Faites-en une et revenez.',
+    tableCaption: 'Prédictions récemment servies, les plus récentes d’abord.',
+    colWhen: 'Quand',
+    rows: 'entrées',
   },
 
   metals: {

@@ -174,6 +174,29 @@ export const modelInfoSchema = z.object({
   }),
 })
 
+export const recentPredictionsSchema = z.object({
+  backend: z.string(),
+  items: z.array(
+    z.object({
+      created_utc: z.string(),
+      model_version: z.string(),
+      canonical_smiles: z.string(),
+      metal: z.string(),
+      temperature_k: z.number().nullable().optional(),
+      duration_h: z.number().nullable().optional(),
+      concentration_mm: z.number().nullable().optional(),
+      inhibition_efficiency: z.number(),
+      interval_low: z.number(),
+      interval_high: z.number(),
+      ad_verdict: z.string(),
+      max_tanimoto: z.number(),
+      scaffold_in_training: z.union([z.boolean(), z.number()]).optional(),
+      source: z.string().optional(),
+    }),
+  ),
+})
+
+export type RecentPrediction = z.infer<typeof recentPredictionsSchema>['items'][number]
 export type Prediction = z.infer<typeof predictionSchema>
 export type ValidationResult = z.infer<typeof validationSchema>
 export type BatchResult = z.infer<typeof batchResultSchema>
@@ -265,4 +288,7 @@ export const api = {
   },
 
   model: () => request('/api/v1/model', modelInfoSchema),
+
+  recentPredictions: (limit = 20) =>
+    request(`/api/v1/predictions/recent?limit=${limit}`, recentPredictionsSchema),
 }
