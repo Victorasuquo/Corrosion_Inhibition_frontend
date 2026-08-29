@@ -51,30 +51,24 @@ export function rampTextOn(value: number): string {
 }
 
 /** Plain-language reading of an efficiency value. Never colour alone. */
-export function efficiencyLabel(value: number): string {
-  if (value >= 90) return 'Very high inhibition'
-  if (value >= 75) return 'High inhibition'
-  if (value >= 55) return 'Moderate inhibition'
-  if (value >= 35) return 'Low inhibition'
-  return 'Little to no inhibition'
+export type EfficiencyKey = 'veryHigh' | 'high' | 'moderate' | 'low' | 'none'
+
+export function efficiencyKey(value: number): EfficiencyKey {
+  if (value >= 90) return 'veryHigh'
+  if (value >= 75) return 'high'
+  if (value >= 55) return 'moderate'
+  if (value >= 35) return 'low'
+  return 'none'
 }
 
-export const DOMAIN_STYLE = {
-  in_domain: {
-    hex: '#008751',
-    label: 'In domain',
-    short: 'Known chemistry',
-  },
-  edge_of_domain: {
-    hex: '#c08a2e',
-    label: 'Edge of domain',
-    short: 'Related chemistry',
-  },
-  out_of_domain: {
-    hex: '#7b2e12',
-    label: 'Outside domain',
-    short: 'Unfamiliar chemistry',
-  },
+/**
+ * Applicability-domain colours only. The words live in the dictionaries, because
+ * they are read by people and must translate.
+ */
+export const DOMAIN_COLOR = {
+  in_domain: '#008751',
+  edge_of_domain: '#c08a2e',
+  out_of_domain: '#7b2e12',
 } as const
 
-export type DomainVerdict = keyof typeof DOMAIN_STYLE
+export type DomainVerdict = keyof typeof DOMAIN_COLOR

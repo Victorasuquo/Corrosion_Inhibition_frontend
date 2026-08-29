@@ -74,24 +74,24 @@ export const EXAMPLES = [
   },
 ] as const
 
-/** Sources for the Niger Delta figures quoted on the page. */
+/** Sources for the global corrosion figures quoted on the page. */
 export const CITATIONS = {
-  spdcSpills: {
+  globalCost: {
     claim:
-      'Shell Petroleum Development Company recorded 810 oil-spill incidents totalling 46,758 barrels between 1989 and 1998; 310 incidents and 24,342 barrels were attributed to pipeline corrosion.',
-    source: 'Management of Oil Spills Due to Pipeline Corrosion in the Niger Delta Region of Nigeria',
-    url: 'https://www.researchgate.net/publication/306356390_MANAGEMENT_OF_OIL_SPILLS_DUE_TO_PIPELINE_CORROSION_IN_THE_NIGER_DELTA_REGION_OF_NIGERIA',
+      'The global cost of corrosion is estimated at US$2.5 trillion a year, about 3.4% of global GDP.',
+    source: 'NACE International IMPACT study (2016)',
+    url: 'http://impact.nace.org/economic-impact.aspx',
   },
-  inhibitorEffect: {
+  savings: {
     claim:
-      'Amine-group inhibitor dosing reduced a measured corrosion rate from 42.71 to 1.34 mils per year.',
-    source: 'Internal corrosion behaviour of Nigerian gas pipelines',
-    url: 'https://journals.unizik.edu.ng/index.php/ujeas/article/download/6140/5109/13994',
+      'Applying established corrosion-control practice could save 15–35% of that cost — between US$375 and US$875 billion a year.',
+    source: 'NACE International IMPACT study, executive summary',
+    url: 'http://impact.nace.org/executive-summary.aspx',
   },
-  nigerDelta: {
+  fullReport: {
     claim:
-      'Pitting and microbially induced corrosion dominate in the Niger Delta, driven by high humidity, salinity and corrosive bacteria.',
-    source: 'Corrosion Management in the Niger Delta',
-    url: 'https://www.gz-supplies.com/news/corrosion-management-in-the-niger-delta-innovative-solutions-for-oil-and-gas-infrastructure-/',
+      'The estimate combines national corrosion-cost studies from India, the United States, Japan, Kuwait and the United Kingdom, extrapolated across World Bank GDP and sector data.',
+    source: 'International Measures of Prevention, Application, and Economics of Corrosion Technologies',
+    url: 'http://impact.nace.org/documents/Nace-International-Report.pdf',
   },
 } as const

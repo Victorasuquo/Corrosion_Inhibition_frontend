@@ -48,9 +48,9 @@ Two consequences drive the whole interface:
 1. **A reading is a band, not a point.** The ±19.52 IE-point conformal interval is drawn as the
    literal width of the readable band on the scale, because that is how an indicator strip is
    actually read. Uncertainty is part of the instrument, not a caveat beneath it.
-2. **Nigeria's national green arrives through the chemistry.** `#008751` is within a hair of
-   copper-patina and passivation green, so it anchors the protected end of the ramp because
-   that is where it physically belongs.
+2. **The green end is passivation, not branding.** `#008751` is the colour of copper patina and
+   of a passivated surface, so the top of the ramp is fixed by the chemistry rather than chosen
+   from a brand palette.
 
 Full system in [`DESIGN.md`](./DESIGN.md). Chart palettes were validated with the `dataviz`
 skill's `validate_palette.js` — all six checks pass, including colour-vision-deficiency

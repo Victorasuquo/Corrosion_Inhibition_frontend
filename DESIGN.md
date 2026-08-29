@@ -20,10 +20,9 @@ Two consequences follow, and they are the whole system:
    places; they read it as sitting *between* two patches. The ±19.52 IE-point conformal
    interval is therefore drawn as the literal width of the band on the scale. Uncertainty is
    built into the primary reading device instead of appended as a caveat.
-2. **Nigeria's national green arrives through the chemistry.** `#008751` sits within a hair of
-   copper-patina and passivation green — the colour of protected metal. It anchors the
-   protected end of the ramp because that is where it physically belongs, never as a flag
-   pasted onto a page.
+2. **The green end is passivation, not branding.** `#008751` is the colour of copper patina
+   and of a passivated surface — the ramp's top stop is chosen from the chemistry, and every
+   other colour in the system is derived from that same axis rather than from a brand palette.
 
 **What this refuses:** the AI-product landing page (gradient hero, three feature cards, a
 dashboard screenshot on a slab), and its predictable opposite, the paper-as-website (cream

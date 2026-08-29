@@ -1,4 +1,5 @@
-import { RAMP, efficiencyLabel, rampColor } from '@/lib/ramp'
+import { RAMP, efficiencyKey, rampColor } from '@/lib/ramp'
+import { useT } from '@/i18n'
 
 /**
  * The bare reference scale, with no reading on it.
@@ -8,9 +9,10 @@ import { RAMP, efficiencyLabel, rampColor } from '@/lib/ramp'
  * product exists not to do.
  */
 export function ReferenceStrip() {
+  const t = useT()
   return (
     <figure className="w-full">
-      <div className="flex h-11 w-full border border-rule" role="img" aria-label="The inhibition efficiency reference scale, from 0 to 100 percent.">
+      <div className="flex h-11 w-full border border-rule" role="img" aria-label={`${t.predictor.efficiencyLabel} 0–100%`}>
         {RAMP.map((stop, i) => (
           <div
             key={stop.stop}
@@ -62,6 +64,7 @@ interface Props {
  * printed underneath it.
  */
 export function ComparatorScale({ value, low, high, coverage, compact = false }: Props) {
+  const t = useT()
   const clamp = (n: number) => Math.min(100, Math.max(0, n))
   const v = clamp(value)
   const lo = clamp(low)
@@ -78,7 +81,7 @@ export function ComparatorScale({ value, low, high, coverage, compact = false }:
         role="img"
         aria-label={`Predicted inhibition efficiency ${v.toFixed(1)} percent, ${Math.round(
           coverage * 100,
-        )} percent interval from ${lo.toFixed(1)} to ${hi.toFixed(1)} percent. ${efficiencyLabel(v)}.`}
+        )}% ${t.predictor.interval} ${lo.toFixed(1)}–${hi.toFixed(1)}%. ${t.efficiency[efficiencyKey(v)]}.`}
       >
         <div className="absolute inset-0 flex">
           {RAMP.map((stop, i) => (
@@ -147,10 +150,10 @@ export function ComparatorScale({ value, low, high, coverage, compact = false }:
               style={{ backgroundColor: rampColor(v) }}
               aria-hidden
             />
-            {efficiencyLabel(v)}
+            {t.efficiency[efficiencyKey(v)]}
           </span>
           <span className="font-mono text-xs text-ink-3 tabular">
-            {Math.round(coverage * 100)}% interval · {lo.toFixed(1)}–{hi.toFixed(1)}% IE
+            {Math.round(coverage * 100)}% {t.predictor.interval} · {lo.toFixed(1)}–{hi.toFixed(1)}% IE
           </span>
         </figcaption>
       )}

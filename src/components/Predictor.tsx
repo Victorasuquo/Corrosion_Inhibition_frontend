@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { ApiError, api, type Explanation, type Prediction, type ValidationResult } from '@/lib/api'
 import { EXAMPLES, METALS, type MetalValue } from '@/lib/constants'
-import { DOMAIN_STYLE } from '@/lib/ramp'
+import { DOMAIN_COLOR } from '@/lib/ramp'
+import { useT } from '@/i18n'
+import type { Translations } from '@/i18n/config'
 import { ComparatorScale, ReferenceStrip } from '@/components/ComparatorScale'
 import { ContributionChart } from '@/components/Charts'
 
@@ -26,45 +28,26 @@ const INITIAL: FormState = {
   recorded: { temperature_k: true, duration_h: true, concentration_mm: true },
 }
 
-const CONDITIONS: {
-  key: ConditionKey
-  label: string
-  unit: string
-  hint: string
-  step: string
-  min: number
-  max: number
-}[] = [
-  {
-    key: 'temperature_k',
-    label: 'Temperature',
-    unit: 'K',
-    hint: '283–606 K in training. 298 K is room temperature.',
-    step: '0.05',
-    min: 200,
-    max: 800,
-  },
-  {
-    key: 'duration_h',
-    label: 'Exposure duration',
-    unit: 'h',
-    hint: 'Recorded for only 54% of the corpus.',
-    step: '0.5',
-    min: 0,
-    max: 10000,
-  },
-  {
-    key: 'concentration_mm',
-    label: 'Inhibitor concentration',
-    unit: 'mM',
-    hint: 'Spans 3×10⁻⁵ to 3280 mM; the model sees log₁₀.',
-    step: 'any',
-    min: 0,
-    max: 100000,
-  },
+const CONDITION_META: { key: ConditionKey; unit: string; step: string; min: number; max: number }[] = [
+  { key: 'temperature_k', unit: 'K', step: '0.05', min: 200, max: 800 },
+  { key: 'duration_h', unit: 'h', step: '0.5', min: 0, max: 10000 },
+  { key: 'concentration_mm', unit: 'mM', step: 'any', min: 0, max: 100000 },
 ]
 
+const CONDITION_TEXT: Record<
+  ConditionKey,
+  (t: Translations) => { label: string; hint: string }
+> = {
+  temperature_k: (t) => ({ label: t.predictor.temperature, hint: t.predictor.temperatureHint }),
+  duration_h: (t) => ({ label: t.predictor.duration, hint: t.predictor.durationHint }),
+  concentration_mm: (t) => ({
+    label: t.predictor.concentration,
+    hint: t.predictor.concentrationHint,
+  }),
+}
+
 export function Predictor() {
+  const t = useT()
   const [form, setForm] = useState<FormState>(INITIAL)
   const [validation, setValidation] = useState<ValidationResult | null>(null)
   const [prediction, setPrediction] = useState<Prediction | null>(null)
@@ -118,7 +101,7 @@ export function Predictor() {
     } catch (err) {
       setPrediction(null)
       setExplanation(null)
-      setError(err instanceof ApiError ? err.message : 'Something went wrong.')
+      setError(err instanceof ApiError ? err.message : t.predictor.genericError)
     } finally {
       setPending(false)
     }
@@ -147,14 +130,14 @@ export function Predictor() {
       {/* ---------------------------------------------------------------- */}
       <form onSubmit={submit} className="panel registered p-6 sm:p-7">
         <div className="mb-6 flex items-baseline justify-between border-b border-ink pb-3">
-          <h3 className="font-display text-lg font-700">Specimen &amp; conditions</h3>
-          <span className="patch-label text-ink-3">5 inputs</span>
+          <h3 className="font-display text-lg font-700">{t.predictor.formTitle}</h3>
+          <span className="patch-label text-ink-3">{t.predictor.inputCount}</span>
         </div>
 
         {/* Molecule */}
         <div className="mb-6">
           <label htmlFor="smiles" className="patch-label mb-2 block text-ink-2">
-            Molecule (SMILES)
+            {t.predictor.smilesLabel}
           </label>
           <textarea
             id="smiles"
@@ -175,11 +158,13 @@ export function Predictor() {
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-ink-2">
                 <span className="font-mono">{validation.formula}</span>
                 <span className="font-mono tabular">
-                  {validation.molecular_weight?.toFixed(1)} g/mol
+                  {validation.molecular_weight?.toFixed(1)} {t.predictor.gramsPerMol}
                 </span>
-                <span className="font-mono tabular">{validation.heavy_atoms} heavy atoms</span>
+                <span className="font-mono tabular">
+                  {validation.heavy_atoms} {t.predictor.heavyAtoms}
+                </span>
                 {validation.in_training_corpus && (
-                  <span className="text-ie-100">In the training corpus</span>
+                  <span className="text-ie-100">{t.predictor.inCorpus}</span>
                 )}
               </div>
             )}
@@ -200,13 +185,13 @@ export function Predictor() {
             ))}
           </div>
           <p className="mt-2 text-xs text-ink-3">
-            No SMILES to hand? Load a real inhibitor above — these fill the same five inputs.
+            {t.predictor.examplesHint}
           </p>
         </div>
 
         {/* Metal */}
         <fieldset className="mb-6">
-          <legend className="patch-label mb-2 text-ink-2">Substrate metal</legend>
+          <legend className="patch-label mb-2 text-ink-2">{t.predictor.metalLabel}</legend>
           <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
             {METALS.map((m) => (
               <label
@@ -225,13 +210,13 @@ export function Predictor() {
                   onChange={() => setForm({ ...form, metal: m.value })}
                   className="sr-only"
                 />
-                <span className="text-sm font-500">{m.label}</span>
+                <span className="text-sm font-500">{t.metals[m.value]}</span>
                 <span
                   className={`font-mono text-[11px] tabular ${
                     form.metal === m.value ? 'text-card/70' : 'text-ink-3'
                   }`}
                 >
-                  {m.rows.toLocaleString()} rows
+                  {m.rows.toLocaleString()} {t.predictor.rows}
                 </span>
               </label>
             ))}
@@ -240,21 +225,18 @@ export function Predictor() {
 
         {/* Conditions */}
         <fieldset className="mb-7">
-          <legend className="patch-label mb-1 text-ink-2">Experimental conditions</legend>
-          <p className="mb-3 text-xs text-ink-3">
-            Untick anything you did not measure. The model was trained with missing-value
-            indicators, so “not recorded” is an answer it understands — not a guess.
-          </p>
+          <legend className="patch-label mb-1 text-ink-2">{t.predictor.conditionsLabel}</legend>
+          <p className="mb-3 text-xs text-ink-3">{t.predictor.conditionsHint}</p>
 
           <div className="space-y-3">
-            {CONDITIONS.map((c) => {
+            {CONDITION_META.map((c) => {
               const on = form.recorded[c.key]
+              const { label, hint } = CONDITION_TEXT[c.key](t)
               return (
                 <div key={c.key}>
                   <div className="flex items-center justify-between gap-3">
                     <label htmlFor={c.key} className="text-sm text-ink-2">
-                      {c.label}{' '}
-                      <span className="font-mono text-xs text-ink-3">({c.unit})</span>
+                      {label} <span className="font-mono text-xs text-ink-3">({c.unit})</span>
                     </label>
                     <label className="flex cursor-pointer items-center gap-1.5 text-xs text-ink-3">
                       <input
@@ -268,7 +250,7 @@ export function Predictor() {
                         }
                         className="h-3.5 w-3.5 accent-ie-100"
                       />
-                      recorded
+                      {t.predictor.recorded}
                     </label>
                   </div>
                   <input
@@ -283,9 +265,9 @@ export function Predictor() {
                     value={form[c.key]}
                     onChange={(e) => setForm({ ...form, [c.key]: e.target.value })}
                     className="mt-1.5 w-full border border-rule bg-card px-3 py-2 font-mono text-sm outline-none tabular focus:border-ink disabled:bg-card-2 disabled:text-ink-3"
-                    placeholder={on ? undefined : 'not recorded'}
+                    placeholder={on ? undefined : t.predictor.notRecorded}
                   />
-                  <p className="mt-1 text-[11px] text-ink-3">{c.hint}</p>
+                  <p className="mt-1 text-[11px] text-ink-3">{hint}</p>
                 </div>
               )
             })}
@@ -297,13 +279,10 @@ export function Predictor() {
           disabled={pending || smilesInvalid || !form.smiles.trim()}
           className="w-full bg-ink py-3.5 font-display text-sm font-700 uppercase tracking-[0.08em] text-card transition-opacity hover:opacity-90 disabled:opacity-40"
         >
-          {pending ? 'Reading…' : 'Predict inhibition efficiency'}
+          {pending ? t.predictor.submitPending : t.predictor.submit}
         </button>
 
-        <p className="mt-3 text-center text-xs text-ink-3">
-          pH is not an input. It is carried through the research pipeline for analysis only and
-          was never a model feature.
-        </p>
+        <p className="mt-3 text-center text-xs text-ink-3">{t.predictor.phNote}</p>
       </form>
 
       {/* ---------------------------------------------------------------- */}
@@ -312,7 +291,7 @@ export function Predictor() {
       <div ref={resultRef} className="space-y-6">
         {error && (
           <div className="panel border-ie-00 p-6" role="alert">
-            <h3 className="patch-label mb-2 text-ie-00">Cannot read</h3>
+            <h3 className="patch-label mb-2 text-ie-00">{t.predictor.errorTitle}</h3>
             <p className="text-sm text-ink-2">{error}</p>
           </div>
         )}
@@ -320,12 +299,8 @@ export function Predictor() {
         {!prediction && !error && (
           <div className="panel registered flex min-h-[22rem] flex-col justify-center p-8 text-center">
             <ReferenceStrip />
-            <h3 className="mt-6 font-display text-lg font-700">The reading appears here</h3>
-            <p className="mx-auto mt-2 max-w-sm text-sm text-ink-2">
-              A prediction is read as a <strong>band</strong>, not a point — the way you read a
-              colour against a comparator card. The band’s width is the model’s calibrated
-              uncertainty.
-            </p>
+            <h3 className="mt-6 font-display text-lg font-700">{t.predictor.emptyTitle}</h3>
+            <p className="mx-auto mt-2 max-w-sm text-sm text-ink-2">{t.predictor.emptyBody}</p>
           </div>
         )}
 
@@ -344,22 +319,23 @@ function Reading({
   prediction: Prediction
   explanation: Explanation | null
 }) {
+  const t = useT()
   const ad = prediction.applicability_domain
-  const style = DOMAIN_STYLE[ad.verdict]
+  const color = DOMAIN_COLOR[ad.verdict]
 
   return (
     <div className="animate-settle space-y-6">
       <div className="panel registered p-6 sm:p-7">
         <div className="mb-5 flex items-baseline justify-between border-b border-ink pb-3">
-          <h3 className="font-display text-lg font-700">Reading</h3>
+          <h3 className="font-display text-lg font-700">{t.predictor.readingTitle}</h3>
           <span className="patch-label font-mono text-ink-3">
-            model v{prediction.model_version}
+            {t.predictor.modelVersion} v{prediction.model_version}
           </span>
         </div>
 
         <div className="mb-5 flex items-end gap-4">
           <div>
-            <div className="patch-label mb-1 text-ink-3">Inhibition efficiency</div>
+            <div className="patch-label mb-1 text-ink-3">{t.predictor.efficiencyLabel}</div>
             <div className="font-mono text-6xl font-600 leading-none tabular">
               {prediction.inhibition_efficiency.toFixed(1)}
               <span className="ml-1 text-3xl text-ink-3">%</span>
@@ -375,65 +351,68 @@ function Reading({
         />
 
         <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-rule pt-4 text-sm sm:grid-cols-3">
-          <Fact label="Formula" value={prediction.formula} mono />
-          <Fact label="Mass" value={`${prediction.molecular_weight.toFixed(1)} g/mol`} mono />
-          <Fact label="Substrate" value={prediction.metal.replace('_', ' ')} />
+          <Fact label={t.predictor.formula} value={prediction.formula} mono />
+          <Fact
+            label={t.predictor.mass}
+            value={`${prediction.molecular_weight.toFixed(1)} ${t.predictor.gramsPerMol}`}
+            mono
+          />
+          <Fact label={t.predictor.substrate} value={t.metals[prediction.metal as keyof typeof t.metals] ?? prediction.metal} />
         </dl>
 
         {prediction.imputed_conditions.length > 0 && (
           <p className="mt-4 border-l-2 border-ie-40 bg-card-2 px-3 py-2 text-xs text-ink-2">
             <strong>
-              {prediction.imputed_conditions.length} condition
-              {prediction.imputed_conditions.length > 1 ? 's were' : ' was'} not recorded
+              {prediction.imputed_conditions.length}{' '}
+              {prediction.imputed_conditions.length > 1
+                ? t.predictor.imputedMany
+                : t.predictor.imputedOne}
             </strong>{' '}
-            ({prediction.imputed_conditions.map((c) => c.replace(/_/g, ' ')).join(', ')}). The
-            model used the training median and was told the value was missing — the same
-            treatment those rows received during training.
+            ({prediction.imputed_conditions.map((c) => c.replace(/_/g, ' ')).join(', ')}).{' '}
+            {t.predictor.imputedBody}
           </p>
         )}
       </div>
 
       {/* Applicability domain — the honesty machinery, given its own panel. */}
-      <div className="panel p-6 sm:p-7" style={{ borderColor: style.hex }}>
+      <div className="panel p-6 sm:p-7" style={{ borderColor: color }}>
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <span
             className="patch-label px-2.5 py-1.5 text-card"
-            style={{ backgroundColor: style.hex }}
+            style={{ backgroundColor: color }}
           >
-            {style.label}
+            {t.domain[ad.verdict]}
           </span>
-          <h3 className="font-display text-base font-700">How far can you trust this?</h3>
+          <h3 className="font-display text-base font-700">{t.predictor.trustTitle}</h3>
         </div>
 
         <p className="mb-5 text-sm text-ink-2">{ad.rationale}</p>
 
         <dl className="grid grid-cols-2 gap-x-6 gap-y-3 border-t border-rule pt-4 text-sm sm:grid-cols-4">
-          <Fact label="Nearest match" value={ad.max_tanimoto.toFixed(2)} mono />
-          <Fact label="Scaffold seen" value={ad.scaffold_in_training ? 'Yes' : 'No'} />
+          <Fact label={t.predictor.nearestMatch} value={ad.max_tanimoto.toFixed(2)} mono />
+          <Fact
+            label={t.predictor.scaffoldSeen}
+            value={ad.scaffold_in_training ? t.predictor.yes : t.predictor.no}
+          />
           <Fact
             label={`R² (${ad.reference_split})`}
             value={ad.reference_r2.toFixed(3)}
             mono
           />
           <Fact
-            label="Interval"
+            label={t.predictor.interval}
             value={`±${prediction.interval_half_width.toFixed(1)}`}
             mono
           />
         </dl>
 
-        <p className="mt-4 text-xs text-ink-3">
-          The quoted R² is the one this request is entitled to. Familiar chemistry is measured by
-          the random split; anything else is measured by the stricter scaffold split.
-        </p>
+        <p className="mt-4 text-xs text-ink-3">{t.predictor.trustFooter}</p>
       </div>
 
       {explanation && explanation.contributions.length > 0 && (
         <div className="panel p-6 sm:p-7">
-          <h3 className="mb-1 font-display text-base font-700">What drove this number</h3>
-          <p className="mb-5 text-sm text-ink-2">
-            Exact Shapley values over the model’s own features, in efficiency points.
-          </p>
+          <h3 className="mb-1 font-display text-base font-700">{t.predictor.shapTitle}</h3>
+          <p className="mb-5 text-sm text-ink-2">{t.predictor.shapLead}</p>
           <ContributionChart explanation={explanation} />
         </div>
       )}

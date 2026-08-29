@@ -3,13 +3,17 @@ import { useEffect, useState } from 'react'
 import { api, type ModelInfo, API_BASE_URL } from '@/lib/api'
 import { ATTRIBUTION, CITATIONS, PRODUCT_NAME, THESIS_TITLE } from '@/lib/constants'
 import { RAMP_GRADIENT } from '@/lib/ramp'
+import { useT } from '@/i18n'
+import type { Translations } from '@/i18n/config'
 import { AblationChart, Leaderboard } from '@/components/Charts'
 import { BatchPanel } from '@/components/BatchPanel'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { Predictor } from '@/components/Predictor'
 
 export default function App() {
   const [model, setModel] = useState<ModelInfo | null>(null)
   const [modelError, setModelError] = useState(false)
+  const t = useT()
 
   useEffect(() => {
     api
@@ -20,19 +24,24 @@ export default function App() {
 
   return (
     <>
-      <SkipLink />
-      <Masthead />
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:text-card"
+      >
+        {t.nav.skip}
+      </a>
+      <Masthead t={t} />
       <main id="main">
-        <Problem />
-        <PredictSection />
-        <Method model={model} />
-        <Results model={model} modelError={modelError} />
-        <Learned />
-        <Limits model={model} />
-        <BatchSection />
-        <Figures />
+        <Problem t={t} />
+        <PredictSection t={t} />
+        <Method t={t} model={model} />
+        <Results t={t} model={model} modelError={modelError} />
+        <Learned t={t} />
+        <Limits t={t} model={model} />
+        <BatchSection t={t} />
+        <Figures t={t} />
       </main>
-      <Colophon model={model} />
+      <Colophon t={t} model={model} />
     </>
   )
 }
@@ -41,18 +50,7 @@ export default function App() {
 /* Shell                                                                       */
 /* -------------------------------------------------------------------------- */
 
-function SkipLink() {
-  return (
-    <a
-      href="#main"
-      className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:text-card"
-    >
-      Skip to content
-    </a>
-  )
-}
-
-function Masthead() {
+function Masthead({ t }: { t: Translations }) {
   return (
     <header className="sticky top-0 z-40 border-b border-ink bg-card/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
@@ -64,26 +62,27 @@ function Masthead() {
           />
           <span className="font-display text-base font-800 tracking-tight">{PRODUCT_NAME}</span>
         </a>
-        <nav className="flex items-center gap-5" aria-label="Sections">
+        <nav className="flex items-center gap-4 sm:gap-5" aria-label={t.nav.sections}>
           {[
-            ['#predict', 'Predict'],
-            ['#method', 'Method'],
-            ['#results', 'Results'],
-            ['#limits', 'Limits'],
+            ['#predict', t.nav.predict],
+            ['#method', t.nav.method],
+            ['#results', t.nav.results],
+            ['#limits', t.nav.limits],
           ].map(([href, label]) => (
             <a
               key={href}
               href={href}
-              className="patch-label hidden text-ink-2 transition-colors hover:text-ink sm:block"
+              className="patch-label hidden text-ink-2 transition-colors hover:text-ink lg:block"
             >
               {label}
             </a>
           ))}
+          <LanguageSwitcher />
           <a
             href="#predict"
             className="patch-label bg-ink px-3 py-2 text-card transition-opacity hover:opacity-90"
           >
-            Predict
+            {t.nav.predict}
           </a>
         </nav>
       </div>
@@ -134,75 +133,52 @@ function Section({
 /* -------------------------------------------------------------------------- */
 
 const HERO_PATCHES = [
-  { pct: 0, label: 'Bare steel, corroding freely', hex: '#7b2e12' },
-  { pct: 40, label: 'Partial film', hex: '#c08a2e' },
-  { pct: 80, label: 'Protective film forming', hex: '#2e8b7a' },
-  { pct: 100, label: 'Passivated, protected', hex: '#008751' },
+  { pct: 0, key: 'patch0', hex: '#7b2e12' },
+  { pct: 40, key: 'patch40', hex: '#c08a2e' },
+  { pct: 80, key: 'patch80', hex: '#2e8b7a' },
+  { pct: 100, key: 'patch100', hex: '#008751' },
 ] as const
 
-function Problem() {
+function Problem({ t }: { t: Translations }) {
   return (
     <section className="border-b border-ink" aria-labelledby="problem-title">
       <div className="mx-auto max-w-6xl px-5 pb-16 pt-16 sm:px-8 sm:pb-20 sm:pt-24">
-        <p className="patch-label mb-6 text-ink-3">
-          {ATTRIBUTION.institution} · {ATTRIBUTION.department}
-        </p>
-
         <h1
           id="problem-title"
           className="max-w-4xl font-display text-[2.6rem] font-800 leading-[0.98] tracking-tight sm:text-6xl lg:text-7xl"
         >
-          Nigeria loses pipelines
+          {t.hero.titleA}
           <br />
-          to rust one
+          {t.hero.titleB}
           <br />
-          molecule at a time.
+          {t.hero.titleC}
         </h1>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
           <div>
-            <p className="max-w-xl text-lg leading-relaxed text-ink-2">
-              In the Niger Delta, high humidity, salinity and corrosive bacteria attack carbon
-              steel from the inside. Between 1989 and 1998 a single operator recorded{' '}
-              <strong className="font-mono text-ink tabular">810</strong> oil-spill incidents
-              totalling <strong className="font-mono text-ink tabular">46,758</strong> barrels —
-              of which <strong className="font-mono text-ink tabular">310</strong> incidents and{' '}
-              <strong className="font-mono text-ink tabular">24,342</strong> barrels were
-              attributed to pipeline corrosion.
-            </p>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-2">
-              The defence is an <strong>organic corrosion inhibitor</strong>: a molecule dosed at
-              parts per million that adsorbs onto the steel and forms a protective film. Dosed
-              well, it has taken a measured corrosion rate from{' '}
-              <strong className="font-mono text-ink tabular">42.7</strong> down to{' '}
-              <strong className="font-mono text-ink tabular">1.3</strong> mils per year.
-            </p>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-2">
-              Finding the right molecule means bench testing candidates one at a time, for weeks.
-              This model estimates the answer first.
-            </p>
+            <p className="max-w-xl text-lg leading-relaxed text-ink-2">{t.hero.p1}</p>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-2">{t.hero.p2}</p>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-2">{t.hero.p3}</p>
 
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <a
                 href="#predict"
                 className="bg-ink px-6 py-3.5 font-display text-sm font-700 uppercase tracking-[0.08em] text-card transition-opacity hover:opacity-90"
               >
-                Make a prediction
+                {t.hero.ctaPrimary}
               </a>
               <a
                 href="#method"
                 className="border border-rule px-6 py-3.5 font-display text-sm font-700 uppercase tracking-[0.08em] text-ink-2 transition-colors hover:border-ink hover:text-ink"
               >
-                How it works
+                {t.hero.ctaSecondary}
               </a>
             </div>
           </div>
 
           {/* The ramp introduced as a physical fact, before it is used as a UI device. */}
           <figure className="panel registered self-start p-6">
-            <figcaption className="patch-label mb-4 text-ink-3">
-              The scale this instrument reads
-            </figcaption>
+            <figcaption className="patch-label mb-4 text-ink-3">{t.hero.scaleTitle}</figcaption>
             {/* Patches share one row so their heights cannot drift with caption length. */}
             <div className="flex h-40 gap-0.5">
               {HERO_PATCHES.map((patch) => (
@@ -211,32 +187,30 @@ function Problem() {
             </div>
             <div className="flex gap-0.5 pt-2">
               {HERO_PATCHES.map((patch) => (
-                <div key={patch.pct} className="flex-1">
+                // pe-3 keeps neighbouring captions from running into each other when
+                // one wraps to two lines and its neighbour does not.
+                <div key={patch.pct} className="min-w-0 flex-1 pe-3">
                   <div className="font-mono text-sm font-600 tabular">{patch.pct}%</div>
-                  <div className="mt-1 text-[11px] leading-tight text-ink-3">{patch.label}</div>
+                  <div className="mt-1 text-[11px] leading-tight text-ink-3">
+                    {t.hero[patch.key]}
+                  </div>
                 </div>
               ))}
             </div>
-            <p className="mt-5 border-t border-rule pt-3 text-xs text-ink-2">
-              Inhibition efficiency is not an abstract score. It is the difference between a metal
-              that dissolves and one that does not — and it has a colour.
-            </p>
+            <p className="mt-5 border-t border-rule pt-3 text-xs text-ink-2">{t.hero.scaleNote}</p>
           </figure>
         </div>
 
         <p className="mt-12 max-w-3xl border-t border-rule pt-4 text-xs text-ink-3">
-          Sources:{' '}
-          <a className="underline hover:text-ink" href={CITATIONS.spdcSpills.url} target="_blank" rel="noreferrer">
-            {CITATIONS.spdcSpills.source}
-          </a>{' '}
-          ·{' '}
-          <a className="underline hover:text-ink" href={CITATIONS.inhibitorEffect.url} target="_blank" rel="noreferrer">
-            {CITATIONS.inhibitorEffect.source}
-          </a>{' '}
-          ·{' '}
-          <a className="underline hover:text-ink" href={CITATIONS.nigerDelta.url} target="_blank" rel="noreferrer">
-            {CITATIONS.nigerDelta.source}
-          </a>
+          {t.hero.sources}:{' '}
+          {[CITATIONS.globalCost, CITATIONS.savings, CITATIONS.fullReport].map((c, i) => (
+            <span key={c.url}>
+              {i > 0 && ' · '}
+              <a className="underline hover:text-ink" href={c.url} target="_blank" rel="noreferrer">
+                {c.source}
+              </a>
+            </span>
+          ))}
         </p>
       </div>
     </section>
@@ -247,20 +221,9 @@ function Problem() {
 /* 2. The instrument                                                           */
 /* -------------------------------------------------------------------------- */
 
-function PredictSection() {
+function PredictSection({ t }: { t: Translations }) {
   return (
-    <Section
-      id="predict"
-      eyebrow="The instrument"
-      title="Read an efficiency."
-      lead={
-        <>
-          Enter a molecule and the conditions it will face. You get a calibrated band, not a
-          false point — and a plain statement of whether this is chemistry the model actually
-          knows.
-        </>
-      }
-    >
+    <Section id="predict" eyebrow={t.predictor.eyebrow} title={t.predictor.title} lead={t.predictor.lead}>
       <Predictor />
     </Section>
   )
@@ -270,68 +233,40 @@ function PredictSection() {
 /* 3. Method                                                                   */
 /* -------------------------------------------------------------------------- */
 
-function Method({ model }: { model: ModelInfo | null }) {
+function Method({ t, model }: { t: Translations; model: ModelInfo | null }) {
+  const steps = [
+    { n: '01', h: t.method.s1h, p: t.method.s1p },
+    { n: '02', h: t.method.s2h, p: t.method.s2p },
+    { n: '03', h: t.method.s3h, p: t.method.s3p },
+    { n: '04', h: t.method.s4h, p: t.method.s4p },
+  ]
+  const stats = [
+    ['5,170', t.method.statMeasurements],
+    ['945', t.method.statMolecules],
+    ['5', t.method.statMetals],
+    ['209', t.method.statDescriptors],
+    ['11', t.method.statConditions],
+    ['0', t.method.statPh],
+  ]
+
   return (
-    <Section
-      id="method"
-      tone="sunk"
-      eyebrow="Method"
-      title="Efficiency depends on conditions. So the model is given them."
-      lead={
-        <>
-          Most published structure–property models predict from molecular structure alone, while
-          the efficiency they are trained against depends on temperature, concentration, duration
-          and substrate. This project carried those conditions through and handed them to the
-          model. That decision is the research.
-        </>
-      }
-    >
+    <Section id="method" tone="sunk" eyebrow={t.method.eyebrow} title={t.method.title} lead={t.method.lead}>
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
-        <div>
-          <ol className="space-y-6">
-            {[
-              {
-                n: '01',
-                h: 'Three datasets, one schema',
-                p: 'Inhibitor 1368, DataCor aluminium and the Excorr database — 7,991 raw measurements harmonised onto a common scale, with SMILES canonicalised and salts stripped.',
-              },
-              {
-                n: '02',
-                h: 'Deduplicate without discarding conditions',
-                p: 'An earlier pipeline averaged each molecule across every condition, collapsing ~8,000 rows to 717. Keying on molecule, metal, temperature, duration and concentration instead preserves distinct measurements — and yields 5,170 usable rows.',
-              },
-              {
-                n: '03',
-                h: '220 features',
-                p: '209 non-constant RDKit descriptors, plus temperature, duration, log₁₀ concentration, a was-missing indicator for each, and a one-hot substrate.',
-              },
-              {
-                n: '04',
-                h: 'Two evaluation splits, always reported together',
-                p: 'Random five-fold, and Bemis–Murcko scaffold five-fold where molecules sharing a core stay in the same fold. The gap between them is the honest story.',
-              },
-            ].map((step) => (
-              <li key={step.n} className="grid grid-cols-[2.5rem_1fr] gap-4">
-                <span className="font-mono text-sm text-ink-3 tabular">{step.n}</span>
-                <div>
-                  <h3 className="font-display text-base font-700">{step.h}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{step.p}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
+        <ol className="space-y-6">
+          {steps.map((step) => (
+            <li key={step.n} className="grid grid-cols-[2.5rem_1fr] gap-4">
+              <span className="font-mono text-sm text-ink-3 tabular">{step.n}</span>
+              <div>
+                <h3 className="font-display text-base font-700">{step.h}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{step.p}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
 
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-px bg-rule sm:grid-cols-3">
-            {[
-              ['5,170', 'measurements'],
-              ['945', 'unique molecules'],
-              ['5', 'metals'],
-              ['209', 'descriptors'],
-              ['11', 'condition features'],
-              ['0', 'pH features'],
-            ].map(([value, label]) => (
+            {stats.map(([value, label]) => (
               <div key={label} className="bg-card px-4 py-5">
                 <div className="font-mono text-2xl font-600 tabular">{value}</div>
                 <div className="patch-label mt-1.5 text-ink-3">{label}</div>
@@ -342,20 +277,20 @@ function Method({ model }: { model: ModelInfo | null }) {
           <figure className="panel p-4">
             <img
               src="/figures/fig04_pipeline_architecture.png"
-              alt="Pipeline architecture: three source datasets feed inspection and preprocessing into a master table, which feeds feature analysis and four modelling streams, which feed ensemble construction."
+              alt={t.method.figure4Alt}
               className="w-full"
               loading="lazy"
             />
             <figcaption className="mt-3 border-t border-rule pt-3 text-xs text-ink-3">
-              <strong className="text-ink-2">Figure 4.</strong> The executed pipeline, from three
-              source datasets through to ensemble construction and conformal calibration.
+              <strong className="text-ink-2">Figure 4.</strong> {t.method.figure4}
             </figcaption>
           </figure>
 
           {model && (
-            <p className="font-mono text-xs text-ink-3">
-              Serving {model.algorithm.replace('_', ' ')} · {model.features.total} features ·
-              seed {model.provenance.seed} · run {model.provenance.source_run}
+            <p className="font-mono text-xs text-ink-3" dir="ltr">
+              {t.method.serving} {model.algorithm.replace('_', ' ')} · {model.features.total}{' '}
+              {t.method.features} · {t.method.seed} {model.provenance.seed} · {t.method.run}{' '}
+              {model.provenance.source_run}
             </p>
           )}
         </div>
@@ -368,88 +303,69 @@ function Method({ model }: { model: ModelInfo | null }) {
 /* 4. Results                                                                  */
 /* -------------------------------------------------------------------------- */
 
-function Results({ model, modelError }: { model: ModelInfo | null; modelError: boolean }) {
+function Results({
+  t,
+  model,
+  modelError,
+}: {
+  t: Translations
+  model: ModelInfo | null
+  modelError: boolean
+}) {
   return (
     <Section
       id="results"
-      eyebrow="Results"
-      title="Two numbers, never one."
+      eyebrow={t.results.eyebrow}
+      title={t.results.title}
       lead={
         <>
-          The model scores <strong className="font-mono text-ink">R² 0.806</strong> on a random
-          split and <strong className="font-mono text-ink">R² 0.310</strong> on a scaffold split.
-          Both are true, and they answer different questions. Quoting only the first would be the
-          easiest way to mislead you, so this page refuses to.
+          {t.results.leadA} <strong className="font-mono text-ink">R² 0.806</strong>{' '}
+          {t.results.leadB} <strong className="font-mono text-ink">R² 0.310</strong>{' '}
+          {t.results.leadC}
         </>
       }
     >
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="panel registered p-6 sm:p-7">
-          <h3 className="patch-label mb-4 text-ink-3">Random split — R² 0.806</h3>
-          <p className="text-sm leading-relaxed text-ink-2">
-            Folds drawn at random. A test molecule may already appear in training under different
-            conditions, so this measures how well the model predicts a{' '}
-            <strong>new measurement of a molecule it has met</strong>. Useful, and not the
-            question a screening chemist is asking.
-          </p>
+          <h3 className="patch-label mb-4 text-ink-3">{t.results.randomTitle}</h3>
+          <p className="text-sm leading-relaxed text-ink-2">{t.results.randomBody}</p>
         </div>
         <div className="panel registered p-6 sm:p-7" style={{ borderColor: '#008751' }}>
           <h3 className="patch-label mb-4" style={{ color: '#008751' }}>
-            Scaffold split — R² 0.310
+            {t.results.scaffoldTitle}
           </h3>
-          <p className="text-sm leading-relaxed text-ink-2">
-            Molecules sharing a Bemis–Murcko core are held in the same fold, so every test
-            molecule is structurally unfamiliar. This measures performance on{' '}
-            <strong>genuinely new chemistry</strong>. It is the number to quote for an untested
-            candidate, and the one this service uses whenever your molecule is new to it.
-          </p>
+          <p className="text-sm leading-relaxed text-ink-2">{t.results.scaffoldBody}</p>
         </div>
       </div>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:gap-14">
         <div className="panel p-6 sm:p-7">
-          <h3 className="mb-1 font-display text-lg font-700">The central result</h3>
-          <p className="mb-6 text-sm text-ink-2">
-            The same random forest, with and without experimental conditions. The lift is
-            systematic — it held for every classical model tested, which is what makes it signal
-            rather than luck.
-          </p>
-          {model ? (
-            <AblationChart ablation={model.ablation} />
-          ) : (
-            <Placeholder error={modelError} />
-          )}
+          <h3 className="mb-1 font-display text-lg font-700">{t.results.ablationTitle}</h3>
+          <p className="mb-6 text-sm text-ink-2">{t.results.ablationLead}</p>
+          {model ? <AblationChart ablation={model.ablation} /> : <Placeholder t={t} error={modelError} />}
         </div>
 
         <div className="panel p-6 sm:p-7">
-          <h3 className="mb-1 font-display text-lg font-700">Every model tested</h3>
-          <p className="mb-6 text-sm text-ink-2">
-            Four model families across both splits. The condition-aware random forest wins
-            everywhere — including against the graph networks and the fine-tuned transformer,
-            which read structure only.
-          </p>
-          {model ? (
-            <Leaderboard rows={model.all_models} />
-          ) : (
-            <Placeholder error={modelError} />
-          )}
+          <h3 className="mb-1 font-display text-lg font-700">{t.results.leaderboardTitle}</h3>
+          <p className="mb-6 text-sm text-ink-2">{t.results.leaderboardLead}</p>
+          {model ? <Leaderboard rows={model.all_models} /> : <Placeholder t={t} error={modelError} />}
         </div>
       </div>
     </Section>
   )
 }
 
-function Placeholder({ error }: { error: boolean }) {
+function Placeholder({ t, error }: { t: Translations; error: boolean }) {
   return (
     <div className="flex min-h-40 items-center justify-center border border-dashed border-rule px-4 py-8 text-center">
       <p className="max-w-xs text-sm text-ink-3">
         {error ? (
           <>
-            Live metrics unavailable — the prediction service at{' '}
-            <code className="font-mono">{API_BASE_URL}</code> is not reachable.
+            {t.results.unavailable} <code className="font-mono">{API_BASE_URL}</code>{' '}
+            {t.results.unreachable}
           </>
         ) : (
-          'Loading metrics…'
+          t.results.loading
         )}
       </p>
     </div>
@@ -460,63 +376,37 @@ function Placeholder({ error }: { error: boolean }) {
 /* 5. What the model learned                                                   */
 /* -------------------------------------------------------------------------- */
 
-function Learned() {
+function Learned({ t }: { t: Translations }) {
+  const insights = [
+    { h: t.learned.i1h, p: t.learned.i1p },
+    { h: t.learned.i2h, p: t.learned.i2p },
+    { h: t.learned.i3h, p: t.learned.i3p },
+    { h: t.learned.i4h, p: t.learned.i4p },
+  ]
+
   return (
-    <Section
-      tone="sunk"
-      eyebrow="Interpretability"
-      title="Did it learn chemistry, or just arithmetic?"
-      lead={
-        <>
-          Shapley values over the whole corpus name what the model leans on. The answer is
-          reassuring: substrate identity, molecular size and the dosing conditions — which is
-          what corrosion science would predict.
-        </>
-      }
-    >
+    <Section tone="sunk" eyebrow={t.learned.eyebrow} title={t.learned.title} lead={t.learned.lead}>
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-14">
         <figure className="panel p-4">
           <img
             src="/figures/fig07_shap_summary.png"
-            alt="SHAP summary plot. The strongest features are metal equals aluminium, molar refractivity, log concentration, temperature and duration, followed by connectivity and partial-charge descriptors."
+            alt={t.learned.figure7Alt}
             className="w-full"
             loading="lazy"
           />
           <figcaption className="mt-3 border-t border-rule pt-3 text-xs text-ink-3">
-            <strong className="text-ink-2">Figure 7.</strong> Global SHAP summary for the tuned
-            random forest. Each point is one molecule; position shows the effect on predicted
-            efficiency.
+            <strong className="text-ink-2">Figure 7.</strong> {t.learned.figure7}
           </figcaption>
         </figure>
 
         <div className="space-y-5">
-          {[
-            {
-              h: 'Substrate dominates',
-              p: 'Which metal you are protecting is the single strongest feature. Aluminium and magnesium behave differently enough from steel that the model treats them almost as separate problems.',
-            },
-            {
-              h: 'Size governs coverage',
-              p: 'Molar refractivity and connectivity indices rank high. Bulkier molecules cover more surface per adsorbed molecule — the physical picture corrosion science already holds.',
-            },
-            {
-              h: 'Dose and heat matter, in that order',
-              p: 'Log concentration outranks temperature, and both outrank most structural descriptors. This is the conditions hypothesis confirmed from the inside.',
-            },
-            {
-              h: 'Electron-rich sites appear',
-              p: 'Partial-charge and electrotopological descriptors surface below the leaders, consistent with adsorption through nitrogen, sulfur and oxygen donor atoms.',
-            },
-          ].map((item) => (
-            <div key={item.h} className="border-l-2 border-rule pl-4">
+          {insights.map((item) => (
+            <div key={item.h} className="border-s-2 border-rule ps-4">
               <h3 className="font-display text-base font-700">{item.h}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{item.p}</p>
             </div>
           ))}
-          <p className="border-t border-rule pt-4 text-xs text-ink-3">
-            Attribution shows what the model relies on. It is evidence that the model learned
-            something physically sensible — not a measurement of adsorption chemistry itself.
-          </p>
+          <p className="border-t border-rule pt-4 text-xs text-ink-3">{t.learned.footer}</p>
         </div>
       </div>
     </Section>
@@ -527,51 +417,32 @@ function Learned() {
 /* 6. Limits                                                                   */
 /* -------------------------------------------------------------------------- */
 
-function Limits({ model }: { model: ModelInfo | null }) {
+function Limits({ t, model }: { t: Translations; model: ModelInfo | null }) {
   const limits = [
-    {
-      h: 'The scaffold gap is large, and it did not close',
-      p: 'Conditions lifted scaffold R² from 0.124 to 0.310 — real, but far below the 0.806 random-split figure. Knowing the conditions cannot substitute for having seen the chemistry.',
-    },
-    {
-      h: 'Duration is missing for 46% of the corpus',
-      p: 'Imputation with a was-missing indicator is honest bookkeeping, but it cannot recover information that was never measured.',
-    },
-    {
-      h: 'pH is excluded by design',
-      p: 'It is recorded for only 32% of rows and is carried for analysis only. Adding it would have meant imputing a majority of the column.',
-    },
-    {
-      h: 'Iron and carbon steel are still separate',
-      p: 'Carbon steel is iron-based and both are usually tested in acid, but the sources do not record the distinction reliably. Whether to merge them into one ferrous group is an open scientific decision, deliberately unresolved.',
-    },
-    {
-      h: 'Tuning was 10 trials, not nested cross-validation',
-      p: 'A direct Optuna search against the scaffold objective. The tuning curve was flat across all trials, so the model is not hyperparameter-limited — but the methodology labels nested CV as planned, not done.',
-    },
-    {
-      h: 'This is not a substitute for testing',
-      p: 'It is a research demonstrator for screening and ranking. Weight-loss and electrochemical measurement remain the evidence.',
-    },
+    { h: t.limits.l1h, p: t.limits.l1p },
+    { h: t.limits.l2h, p: t.limits.l2p },
+    { h: t.limits.l3h, p: t.limits.l3p },
+    { h: t.limits.l4h, p: t.limits.l4p },
+    { h: t.limits.l5h, p: t.limits.l5p },
+    { h: t.limits.l6h, p: t.limits.l6p },
   ]
 
   return (
     <Section
       id="limits"
-      eyebrow="Limits"
-      title="Where this model stops working."
+      eyebrow={t.limits.eyebrow}
+      title={t.limits.title}
       lead={
         <>
-          Every item here is one an examiner would otherwise have to find. Calibrated uncertainty
-          of{' '}
+          {t.limits.leadA}{' '}
           <strong className="font-mono text-ink">
             ±{model?.calibration.half_width_ie_points.toFixed(1) ?? '19.5'}
           </strong>{' '}
-          efficiency points at{' '}
+          {t.limits.leadB}{' '}
           <strong className="font-mono text-ink">
             {model ? Math.round(model.calibration.empirical_coverage * 100) : 95}%
           </strong>{' '}
-          empirical coverage is wide — and stating it plainly is the point.
+          {t.limits.leadC}
         </>
       }
     >
@@ -591,13 +462,9 @@ function Limits({ model }: { model: ModelInfo | null }) {
 /* 7. Batch                                                                    */
 /* -------------------------------------------------------------------------- */
 
-function BatchSection() {
+function BatchSection({ t }: { t: Translations }) {
   return (
-    <Section
-      eyebrow="Batch"
-      title="Rank a whole candidate series."
-      lead="Upload a CSV of molecules under one service condition and get them back ordered by predicted efficiency, each with its own band and trust verdict."
-    >
+    <Section eyebrow={t.batch.eyebrow} title={t.batch.title} lead={t.batch.lead}>
       <BatchPanel />
     </Section>
   )
@@ -607,33 +474,23 @@ function BatchSection() {
 /* 8. Figures                                                                  */
 /* -------------------------------------------------------------------------- */
 
-const FIGURES = [
-  ['fig01_target_distributions_raw.png', 'Figure 1', 'Raw target distributions across the three source datasets, before harmonisation.'],
-  ['fig03_target_distribution_harmonised.png', 'Figure 3', 'The harmonised efficiency distribution after canonicalisation, deduplication and metal scoping.'],
-  ['fig05_mutual_information.png', 'Figure 5', 'Top 30 descriptors by mutual information with the target.'],
-  ['fig06_descriptor_correlation.png', 'Figure 6', 'Correlation among the leading descriptors, exposing redundancy in the size and connectivity families.'],
-  ['fig08_ig_atom_saliency.png', 'Figure 8', 'Integrated-gradients atom saliency on the message-passing network.'],
-  ['fig09_attention_rollout.png', 'Figure 9', 'Attention rollout over a SMILES string from the fine-tuned ChemBERTa.'],
-  ['fig10_conformal_intervals.png', 'Figure 10', 'Predictions with 90% conformal intervals against observed values.'],
-] as const
+function Figures({ t }: { t: Translations }) {
+  const figures = [
+    ['fig01_target_distributions_raw.png', 'Figure 1', t.figures.f1],
+    ['fig03_target_distribution_harmonised.png', 'Figure 3', t.figures.f3],
+    ['fig05_mutual_information.png', 'Figure 5', t.figures.f5],
+    ['fig06_descriptor_correlation.png', 'Figure 6', t.figures.f6],
+    ['fig08_ig_atom_saliency.png', 'Figure 8', t.figures.f8],
+    ['fig09_attention_rollout.png', 'Figure 9', t.figures.f9],
+    ['fig10_conformal_intervals.png', 'Figure 10', t.figures.f10],
+  ]
 
-function Figures() {
   return (
-    <Section
-      tone="sunk"
-      eyebrow="Appendix"
-      title="Figures from the executed run."
-      lead="Produced directly by the notebook, reproduced here unaltered."
-    >
+    <Section tone="sunk" eyebrow={t.figures.eyebrow} title={t.figures.title} lead={t.figures.lead}>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {FIGURES.map(([file, label, caption]) => (
+        {figures.map(([file, label, caption]) => (
           <figure key={file} className="panel p-4">
-            <img
-              src={`/figures/${file}`}
-              alt={caption}
-              className="w-full bg-white"
-              loading="lazy"
-            />
+            <img src={`/figures/${file}`} alt={caption} className="w-full bg-white" loading="lazy" />
             <figcaption className="mt-3 border-t border-rule pt-3 text-xs text-ink-3">
               <strong className="text-ink-2">{label}.</strong> {caption}
             </figcaption>
@@ -648,7 +505,7 @@ function Figures() {
 /* Colophon                                                                    */
 /* -------------------------------------------------------------------------- */
 
-function Colophon({ model }: { model: ModelInfo | null }) {
+function Colophon({ t, model }: { t: Translations; model: ModelInfo | null }) {
   return (
     <footer className="bg-ink text-card">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
@@ -662,10 +519,10 @@ function Colophon({ model }: { model: ModelInfo | null }) {
             <h2 className="max-w-xl font-display text-xl font-700 leading-snug">{THESIS_TITLE}</h2>
             <dl className="mt-7 grid gap-x-8 gap-y-4 sm:grid-cols-2">
               {[
-                ['Author', ATTRIBUTION.author],
-                ['Supervisor', ATTRIBUTION.supervisor],
-                ['Co-supervisor', ATTRIBUTION.coSupervisor],
-                ['Institution', `${ATTRIBUTION.department}, ${ATTRIBUTION.institution}`],
+                [t.colophon.author, ATTRIBUTION.author],
+                [t.colophon.supervisor, ATTRIBUTION.supervisor],
+                [t.colophon.coSupervisor, ATTRIBUTION.coSupervisor],
+                [t.colophon.institution, `${ATTRIBUTION.department}, ${ATTRIBUTION.institution}`],
               ].map(([label, value]) => (
                 <div key={label}>
                   <dt className="patch-label mb-1 text-card/50">{label}</dt>
@@ -676,35 +533,26 @@ function Colophon({ model }: { model: ModelInfo | null }) {
           </div>
 
           <div className="text-sm">
-            <h3 className="patch-label mb-4 text-card/50">Provenance</h3>
+            <h3 className="patch-label mb-4 text-card/50">{t.colophon.provenance}</h3>
             {model ? (
-              <dl className="space-y-2 font-mono text-xs text-card/80">
-                <Prov label="Model version" value={`v${model.version}`} />
-                <Prov label="Source run" value={model.provenance.source_run} />
-                <Prov label="Seed" value={String(model.provenance.seed)} />
+              <dl className="space-y-2 font-mono text-xs text-card/80" dir="ltr">
+                <Prov label={t.colophon.modelVersion} value={`v${model.version}`} />
+                <Prov label={t.colophon.sourceRun} value={model.provenance.source_run} />
+                <Prov label={t.colophon.seed} value={String(model.provenance.seed)} />
                 <Prov label="scikit-learn" value={model.provenance.pins['scikit-learn'] ?? '—'} />
                 <Prov label="RDKit" value={model.provenance.rdkit_runtime} />
                 <Prov
-                  label="Model SHA-256"
+                  label={t.colophon.modelHash}
                   value={model.provenance.artifact_hashes['model.joblib'] ?? '—'}
                 />
               </dl>
             ) : (
-              <p className="text-xs text-card/50">Service unavailable.</p>
+              <p className="text-xs text-card/50">{t.colophon.unavailable}</p>
             )}
-            <p className="mt-6 text-xs leading-relaxed text-card/60">
-              Every artefact is verified against a SHA-256 manifest before the service will
-              start. Dataset citations are still being traced; the three source datasets are
-              linked to rather than redistributed.
-            </p>
+            <p className="mt-6 text-xs leading-relaxed text-card/60">{t.colophon.provenanceNote}</p>
           </div>
         </div>
 
-        <p className="mt-12 border-t border-card/20 pt-6 text-xs text-card/50">
-          {PRODUCT_NAME} is a research demonstrator. Predictions are hypotheses to test, never a
-          substitute for weight-loss or electrochemical measurement, and never a basis for
-          engineering sign-off.
-        </p>
       </div>
     </footer>
   )

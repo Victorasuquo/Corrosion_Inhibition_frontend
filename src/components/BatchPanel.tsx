@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 
 import { ApiError, api, type BatchResult } from '@/lib/api'
-import { DOMAIN_STYLE, rampColor } from '@/lib/ramp'
+import { DOMAIN_COLOR, rampColor } from '@/lib/ramp'
+import { useT } from '@/i18n'
 
 const TEMPLATE = `smiles,metal,temperature_k,duration_h,concentration_mm
 c1ccc2[nH]nnc2c1,carbon_steel,298.15,6,1.0
@@ -17,6 +18,7 @@ Cn1cnc2c1c(=O)n(C)c(=O)n2C,carbon_steel,303.15,4,2
  * so results are sorted by predicted efficiency rather than left in file order.
  */
 export function BatchPanel() {
+  const t = useT()
   const [result, setResult] = useState<BatchResult | null>(null)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -31,7 +33,7 @@ export function BatchPanel() {
       setResult(await api.batchCsv(file))
     } catch (err) {
       setResult(null)
-      setError(err instanceof ApiError ? err.message : 'Upload failed.')
+      setError(err instanceof ApiError ? err.message : t.predictor.genericError)
     } finally {
       setPending(false)
     }
@@ -89,18 +91,15 @@ export function BatchPanel() {
     <div className="panel registered p-6 sm:p-8">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b border-ink pb-4">
         <div>
-          <h3 className="font-display text-lg font-700">Screen a series</h3>
-          <p className="mt-1 max-w-md text-sm text-ink-2">
-            Upload a CSV to rank candidates under one service condition. Descriptors are cached
-            per unique molecule and the forest is called once for the whole file.
-          </p>
+          <h3 className="font-display text-lg font-700">{t.batch.panelTitle}</h3>
+          <p className="mt-1 max-w-md text-sm text-ink-2">{t.batch.panelLead}</p>
         </div>
         <button
           type="button"
           onClick={downloadTemplate}
           className="patch-label border border-rule px-3 py-2 text-ink-2 transition-colors hover:border-ink hover:bg-card-2"
         >
-          Download template
+          {t.batch.template}
         </button>
       </div>
 
@@ -121,7 +120,7 @@ export function BatchPanel() {
           className="flex cursor-pointer flex-col items-center border border-dashed border-rule bg-card-2/50 px-6 py-10 text-center transition-colors hover:border-ink hover:bg-card-2"
         >
           <span className="font-display text-sm font-600">
-            {pending ? 'Reading file…' : 'Choose a CSV file'}
+            {pending ? t.batch.reading : t.batch.choose}
           </span>
           <span className="mt-1.5 font-mono text-xs text-ink-3">
             smiles, metal, temperature_k, duration_h, concentration_mm
@@ -142,7 +141,7 @@ export function BatchPanel() {
         <div className="mt-6">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <p className="font-mono text-xs text-ink-2 tabular">
-              {result.succeeded} predicted · {result.failed} failed ·{' '}
+              {result.succeeded} {t.batch.predicted} · {result.failed} {t.batch.failed} ·{' '}
               {result.elapsed_ms.toFixed(0)} ms
             </p>
             {result.succeeded > 0 && (
@@ -151,20 +150,20 @@ export function BatchPanel() {
                 onClick={downloadResults}
                 className="patch-label border border-ink bg-ink px-3 py-2 text-card transition-opacity hover:opacity-90"
               >
-                Download results
+                {t.batch.download}
               </button>
             )}
           </div>
 
           <div className="max-h-96 overflow-auto border border-rule">
             <table className="w-full min-w-[34rem] border-collapse text-sm">
-              <caption className="sr-only">Batch results, ranked by predicted efficiency.</caption>
+              <caption className="sr-only">{t.batch.tableCaption}</caption>
               <thead className="sticky top-0 bg-card-2">
                 <tr className="border-b border-ink text-left">
-                  <th scope="col" className="patch-label px-3 py-2 text-ink-3">Molecule</th>
+                  <th scope="col" className="patch-label px-3 py-2 text-ink-3">{t.batch.colMolecule}</th>
                   <th scope="col" className="patch-label px-3 py-2 text-right text-ink-3">IE %</th>
-                  <th scope="col" className="patch-label px-3 py-2 text-ink-3">Reading</th>
-                  <th scope="col" className="patch-label px-3 py-2 text-ink-3">Trust</th>
+                  <th scope="col" className="patch-label px-3 py-2 text-ink-3">{t.batch.colReading}</th>
+                  <th scope="col" className="patch-label px-3 py-2 text-ink-3">{t.batch.colTrust}</th>
                 </tr>
               </thead>
               <tbody>
@@ -172,7 +171,7 @@ export function BatchPanel() {
                   if (!row.ok || !row.prediction) {
                     return (
                       <tr key={`err-${i}`} className="border-b border-rule last:border-0">
-                        <td className="px-3 py-2 font-mono text-xs text-ink-3">row {row.index + 1}</td>
+                        <td className="px-3 py-2 font-mono text-xs text-ink-3">{t.batch.row} {row.index + 1}</td>
                         <td colSpan={3} className="px-3 py-2 text-xs text-ie-00">
                           {row.error}
                         </td>
@@ -180,7 +179,7 @@ export function BatchPanel() {
                     )
                   }
                   const p = row.prediction
-                  const style = DOMAIN_STYLE[p.applicability_domain.verdict]
+                  const verdict = p.applicability_domain.verdict
                   return (
                     <tr key={`ok-${i}`} className="border-b border-rule last:border-0">
                       <td className="max-w-[12rem] truncate px-3 py-2 font-mono text-xs" title={p.canonical_smiles}>
@@ -210,10 +209,14 @@ export function BatchPanel() {
                         <span className="flex items-center gap-1.5 text-xs text-ink-2">
                           <span
                             className="h-2 w-2 shrink-0"
-                            style={{ backgroundColor: style.hex }}
+                            style={{ backgroundColor: DOMAIN_COLOR[verdict] }}
                             aria-hidden
                           />
-                          {style.short}
+                          {verdict === 'in_domain'
+                            ? t.domain.inShort
+                            : verdict === 'edge_of_domain'
+                              ? t.domain.edgeShort
+                              : t.domain.outShort}
                         </span>
                       </td>
                     </tr>
