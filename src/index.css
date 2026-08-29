@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Inhibiepdt — colorimetric comparator card
+   Colour is the measurement. The IE ramp below is the single source of every
+   status colour, chart series and gauge stop in the product. See DESIGN.md.
+   ========================================================================== */
+
+@theme {
+  /* --- the reading ramp, ordered by inhibition efficiency ---------------- */
+  --color-ie-00: #7b2e12;  /* iron(III) oxide — active corrosion */
+  --color-ie-20: #b4551f;  /* oxide orange */
+  --color-ie-40: #c08a2e;  /* brass edge */
+  --color-ie-60: #7e9a52;  /* onset of passivation */
+  --color-ie-80: #2e8b7a;  /* verdigris */
+  --color-ie-100: #008751; /* passivation green — fully protected */
+
+  /* --- ground and ink ---------------------------------------------------- */
+  --color-card: #f4f5f2;
+  --color-card-2: #e8eae5;
+  --color-card-3: #dcdfd8;
+  --color-ink: #171a18;
+  --color-ink-2: #4a514c;
+  --color-ink-3: #6d756f;
+  --color-rule: #c9cec7;
+  --color-steel: #3c4a52;
+
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Azeret Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius-card: 2px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-card);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Measurements are set in mono; prose is not. */
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  ::selection {
+    background-color: var(--color-ie-100);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ie-80);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* The printed-card panel: a hairline rule, squared corners, no elevation. */
+  .panel {
+    border: 1px solid var(--color-rule);
+    background-color: var(--color-card);
+    border-radius: var(--radius-card);
+  }
+
+  /* Registration ticks in the corners, as on a printed trim. */
+  .registered { position: relative; }
+  .registered::before,
+  .registered::after {
+    content: "";
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-color: var(--color-ink-3);
+    pointer-events: none;
+  }
+  .registered::before {
+    top: -1px; left: -1px;
+    border-top: 1.5px solid; border-left: 1.5px solid;
+  }
+  .registered::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1.5px solid; border-right: 1.5px solid;
+  }
+
+  /* The comparator card's native lettering. */
+  .patch-label {
+    font-size: 0.6875rem;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+}
+
+/* The reading settles into place, the way a matched patch resolves. */
+@keyframes settle {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+.animate-settle { animation: settle 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
