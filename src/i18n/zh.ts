@@ -4,7 +4,7 @@ export const zh: Translations = {
   meta: {
     title: 'Inhibiepdt — 腐蚀缓蚀效率预测',
     description:
-      '在给定实验条件下，预测有机分子对铝、碳钢、铜、铁或镁的腐蚀缓蚀效率，并给出经校准的不确定度区间与真实的适用域判定。',
+      'Predict the corrosion inhibition efficiency of an organic molecule on iron, aluminium, magnesium or copper under stated experimental conditions, with a calibrated uncertainty band and an honest applicability-domain verdict.',  // TODO(i18n)
   },
 
   nav: {
@@ -20,6 +20,8 @@ export const zh: Translations = {
     figures: '图表',
     cite: '引用',
     history: '活动',
+    login: '登录',
+    register: '注册',
   },
 
   pages: {
@@ -58,7 +60,7 @@ export const zh: Translations = {
     lead: '输入分子及其将面临的条件。你会得到一个经校准的区间，而非虚假的点估计——并明确得知这是否属于模型真正掌握的化学。',
 
     formTitle: '试样与条件',
-    inputCount: '5 项输入',
+    inputCount: '11 inputs',  // TODO(i18n)
     smilesLabel: '分子（SMILES）',
     gramsPerMol: 'g/mol',
     heavyAtoms: '个重原子',
@@ -74,16 +76,14 @@ export const zh: Translations = {
     recorded: '已记录',
     notRecorded: '未记录',
     temperature: '温度',
-    temperatureHint: '训练范围 283–606 K。298 K 为室温。',
+    temperatureHint: '283–606 K in training. 298 K is room temperature.',  // TODO(i18n)
     duration: '暴露时间',
-    durationHint: '仅 54% 的语料记录了该项。',
+    durationHint: 'Recorded for only 54% of the corpus.',  // TODO(i18n)
     concentration: '缓蚀剂浓度',
-    concentrationHint: '跨度为 3×10⁻⁵ 至 3280 mM；模型使用 log₁₀。',
+    concentrationHint: 'Spans 3×10⁻⁵ to 3300 mM; the model sees log₁₀.',  // TODO(i18n)
 
     submit: '预测缓蚀效率',
     submitPending: '读取中…',
-    phNote: 'pH 不是输入项。它在研究流程中仅作分析之用，从未作为模型特征。',
-
     emptyTitle: '读数将显示在此处',
     emptyBody:
       '预测应当读作一个区间，而非一个点——正如对照比色卡读取颜色一样。区间宽度即模型经校准的不确定度。',
@@ -111,6 +111,40 @@ export const zh: Translations = {
     trustFooter:
       '所引用的 R² 是本次请求应得的那一个。熟悉的化学以随机划分衡量；其余则以更严格的骨架划分衡量。',
 
+    // TODO(i18n): the keys below carry English text pending translation.
+    saltStripped: 'Counter-ion removed',
+    contextLabel: 'Substrate & technique',
+    contextHint:
+      'Both are model inputs, and both matter: adding them lifted explained variance from 0.395 to 0.456 on unseen molecules. Pick from the lists — they are the exact values the model encodes.',
+    alloyLabel: 'Alloy designation',
+    alloyHint:
+      'Carbon steel lives here, not under metal. Grades with fewer than 30 corpus rows were pooled during training, and anything outside the list is pooled the same way.',
+    methodLabel: 'Measurement technique',
+    methodHint:
+      'Techniques disagree by tens of efficiency points, so the model is told which one you mean. Use "not stated" if you do not know — it is a real category with 1,389 rows.',
+    unreliableTag: '\u26a0',
+    synergistLabel: 'A synergistic additive is present',
+    synergistHint: 'Only 110 corpus rows record one, so this is weakly supported either way.',
+    ph: 'Electrolyte pH',
+    phHint:
+      'A model feature in this version. Negative values are real — the corpus reaches \u22121.0 in concentrated acid.',
+    phSourceLabel: 'This pH was',
+    salt: 'Supporting salt',
+    saltHint: 'Recorded for only 39% of the corpus, so leaving this unticked is normal.',
+    intervalNote:
+      'Every reading is a 90% band, never a bare number. On an unseen molecule that band is \u00b138.6 efficiency points, which is the honest width.',
+    preflightTitle: 'Before you read this',
+    explain: 'Explain',
+    close: 'Close',
+    nearestIs: 'Closest molecule in the training corpus:',
+    pooledInto: 'is not encoded individually, so it was pooled into',
+    replicateNote:
+      'For scale, two independent laboratory measurements of the same experiment differ by about {spread} efficiency points. A large part of the error is in the measurements, not the model.',
+    warningsTitle: 'Known limits on this reading',
+    warnUnreliableAlloy:
+      'the model explains no variance on this grade. It is in the study as a documented failure.',
+    warnUnreliableMethod: 'measurements made this way are the ones the model fits worst.',
+
     shapTitle: '是什么决定了这个数值',
     shapLead: '基于模型自身特征的精确 Shapley 值，以效率百分点表示。',
   },
@@ -137,13 +171,13 @@ export const zh: Translations = {
     title: '效率取决于条件，因此模型必须知道条件。',
     lead: '多数已发表的结构—性质模型仅凭分子结构进行预测，而它们所依据的效率却取决于温度、浓度、时长与基体。本项目将这些条件贯穿始终并交给模型。这一决定本身就是研究内容。',
     s1h: '三套数据集，一个统一模式',
-    s1p: 'Inhibitor 1368、DataCor 铝数据集与 Excorr 数据库——7991 条原始测量统一到同一标度，SMILES 经规范化并去除盐分。',
+    s1p: 'Inhibitor 1368, the DataCor aluminium set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',  // TODO(i18n)
     s2h: '去重但不丢弃条件',
-    s2p: '早期流程对每个分子在所有条件上取平均，将约 8000 条记录压缩为 717 条。改用分子、金属、温度、时长与浓度作为联合键，可保留不同的测量——得到 5170 条可用记录。',
-    s3h: '220 个特征',
-    s3p: '209 个非常量 RDKit 描述符，加上温度、时长、浓度的 log₁₀、各自的缺失指示变量，以及基体的独热编码。',
-    s4h: '两种评估划分，始终一并报告',
-    s4p: '随机五折交叉验证，以及 Bemis–Murcko 骨架五折划分——共享同一骨架的分子留在同一折中。两者之间的差距才是诚实的结论。',
+    s2p: 'An earlier pipeline averaged each molecule across every condition, collapsing thousands of rows to 717. Keying on molecule, metal, temperature, duration, concentration and pH instead preserves distinct measurements — 8,359 of them, over 1,050 molecules on four base metals.',  // TODO(i18n)
+    s3h: '283 features',  // TODO(i18n)
+    s3p: '211 non-constant RDKit descriptors, then the context: temperature and its inverse, duration and log₁₀ duration, log₁₀ concentration, pH, log₁₀ salt concentration, a was-missing indicator for each, and one-hot encodings of base metal, alloy grade, measurement technique and pH provenance, plus a synergist flag.',  // TODO(i18n)
+    s4h: 'Two honest splits, always reported together',  // TODO(i18n)
+    s4p: 'Five-fold grouped by molecule, so no test molecule appears in training, and Bemis–Murcko scaffold five-fold, where molecules sharing a core stay in the same fold. A third, row-wise split was run as a control and is reported only to show how badly it flatters the model.',  // TODO(i18n)
     statMeasurements: '条测量',
     statMolecules: '个独立分子',
     statMetals: '种金属',
@@ -165,10 +199,11 @@ export const zh: Translations = {
     leadA: '模型在随机划分上取得',
     leadB: '，在骨架划分上取得',
     leadC: '。两者都属实，但回答的是不同的问题。只引用前者是误导你最简单的方式，本页拒绝这样做。',
-    randomTitle: '随机划分 — R² 0.806',
-    randomBody:
-      '折随机划分。测试分子可能已在训练集中以其他条件出现，因此这衡量的是模型对已见过分子的新测量的预测能力。有用，但并不是筛选阶段的化学家真正要问的问题。',
-    scaffoldTitle: '骨架划分 — R² 0.310',
+    // TODO(i18n): English text pending translation.
+    groupedTitle: 'By molecule — R\u00b2 0.461',
+    groupedBody:
+      'Every measurement of a molecule is held in the same fold, so no test molecule appears in training under any conditions. This is the honest estimate for a molecule the model has not met: it explains 46% of the variance, with a typical error of 15.7 efficiency points.',
+    scaffoldTitle: '骨架划分 — R² 0.398',
     scaffoldBody:
       '共享 Bemis–Murcko 骨架的分子留在同一折中，因此每个测试分子在结构上都是陌生的。这衡量的是对真正新化学的性能。对于未经试验的候选物，应引用这个数字；每当你的分子对本服务而言是新的，它也使用这个数字。',
     ablationTitle: '核心结果',
@@ -186,16 +221,19 @@ export const zh: Translations = {
     structureOnly: '仅结构',
     structurePlusConditions: '结构 + 实验条件',
     structurePlusShort: '结构 + 条件',
-    randomSplit: '随机划分',
     scaffoldSplit: '骨架划分',
-    randomSub: '已知分子的新测量',
-    scaffoldSub: '真正的新化学',
+    scaffoldSub: 'Genuinely new chemistry',  // TODO(i18n)
     r2Note: 'R² — 决定系数，取值 0 至 1，越高越好。',
     splitGroup: '评估划分',
     scaffoldExplain:
       '共享 Bemis–Murcko 骨架的分子留在同一折中，因此每个测试分子在结构上都是全新的。这是对陌生候选物的诚实估计。',
-    randomExplain:
-      '折为随机划分，因此测试分子可能已在训练集中以其他条件出现。这衡量的是新测量，而非新化学。',
+    groupedSplit: 'By molecule',
+    groupedSub: 'Molecules absent from training',
+    groupedExplain:
+      'Every measurement of a molecule is held in the same fold, so no test molecule appears in training under any conditions. This is the honest estimate for a molecule the model has not seen.',
+    colStep: 'Feature block added',
+    colFeatures: 'cols',
+    colMarginal: '\u0394 R\u00b2',
     colModel: '模型',
     colRepresentation: '表示方式',
     colMae: 'MAE',
@@ -234,18 +272,18 @@ export const zh: Translations = {
     leadA: '此处每一条，都是答辩委员本来需要自己找出来的。经校准的不确定度为',
     leadB: '个效率百分点，经验覆盖率为',
     leadC: '——区间确实很宽，而明确说出来正是本页的用意。',
-    l1h: '骨架划分的差距很大，且并未缩小',
-    l1p: '加入条件后骨架 R² 从 0.124 提升至 0.310——提升真实，但远低于随机划分的 0.806。知道条件并不能替代见过这类化学。',
-    l2h: '46% 的语料缺少暴露时长',
-    l2p: '带缺失指示变量的插补是诚实的记账方式，但无法还原从未被测量过的信息。',
-    l3h: 'pH 被有意排除',
-    l3p: '它仅在 32% 的记录中有值，且只保留作分析之用。若纳入模型，就意味着对该列的大多数进行插补。',
-    l4h: '铁与碳钢仍分列两类',
-    l4p: '碳钢以铁为基，且两者通常都在酸性介质中试验，但各数据源对这一区分的记录并不可靠。是否合并为单一铁基类别，是一个悬而未决且有意保留的科学决定。',
-    l5h: '调参为 10 次试验，而非嵌套交叉验证',
-    l5p: '针对骨架目标的直接 Optuna 搜索。调参曲线在所有试验中都很平坦，说明模型并未受超参数限制——但方法学中将嵌套交叉验证标注为「计划中」，而非已完成。',
-    l6h: '这不能替代试验',
-    l6p: '它是用于筛选与排序的研究演示系统。失重法与电化学测量仍然是证据本身。',
+    l1h: 'The band is wider than the answer',  // TODO(i18n)
+    l1p: 'The 90% interval is ±38.6 efficiency points on an unseen molecule. That is honest, and it is also wide enough that this model ranks candidates rather than measuring them. Treat any single number as a position in a queue.',  // TODO(i18n)
+    l2h: 'Some groups fail outright',  // TODO(i18n)
+    l2p: 'On the alloys recorded as Cold rolled steel, Stainless steel, Fe, Steel and AA1100, and on gravimetric, polarisation-resistance and current-density measurements, the model explains no variance at all. Those readings are flagged where they occur rather than quietly averaged into the headline.',  // TODO(i18n)
+    l3h: 'Much of the context was never recorded',  // TODO(i18n)
+    l3p: 'Duration is absent for a third of the corpus and supporting salt concentration for 61%. A was-missing indicator is honest bookkeeping, but it cannot recover information nobody measured.',  // TODO(i18n)
+    l4h: 'pH was recovered, not measured',  // TODO(i18n)
+    l4p: 'pH became a feature in this version, but only 49% of values were measured directly — the rest were calculated from the stated corrodent or inferred as a band. The model is told which, and on its own the provenance block slightly lowered accuracy rather than raising it.',  // TODO(i18n)
+    l5h: 'The reported tuning is not nested cross-validation',  // TODO(i18n)
+    l5p: 'Nested CV was implemented but not executed in the reported run; the served hyperparameters come from a direct 10-trial search against the scaffold objective. The tuned figures should be read as optimistic by an unmeasured margin, which is why the untuned benchmark carries the comparative conclusions.',  // TODO(i18n)
+    l6h: 'Validated against the literature, not against a bench',  // TODO(i18n)
+    l6p: 'Every figure here is measured against the published record. The comparison against this project’s own laboratory measurements has not been done. Weight-loss and electrochemical testing remain the evidence.',  // TODO(i18n)
   },
 
   batch: {
@@ -319,9 +357,12 @@ export const zh: Translations = {
     dataBody: '语料由三套公开数据集统一而来。它们归原作者所有，此处以链接给出，而非再分发。',
     dataGapTitle: '引用仍在追溯中',
     dataGapBody: '这三套数据集的原始出版物尚未确认，因此此处不印出任何参考文献，以免印出可能有误的一条。若你使用该语料，请将每套数据集追溯至其源出版物并直接引用。',
-    dsInhibitor: '1364 条碳钢在 1 M HCl 中的记录，附量子化学描述符。',
-    dsDatacor: '涵盖十七种铝基体的 2011 条测量，逐行记录实验条件。',
-    dsExcorr: '4616 条记录，涵盖铁、铝、镁、铜与锌。',
+    dsInhibitor:
+      '1,364 entries for carbon steel in 1 M HCl, with quantum-chemical descriptors.',  // TODO(i18n)
+    dsDatacor:
+      'The CORDATA multi-metal export: 5,000 rows across seventeen fields, covering aluminium, copper, iron, magnesium and zinc, with per-row conditions.',  // TODO(i18n)
+    dsExcorr:
+      '4,616 entries spanning iron, aluminium, magnesium, copper and zinc.',  // TODO(i18n)
     citationPending: '参考文献待补',
 
     licenceEyebrow: '条款',
@@ -343,10 +384,24 @@ export const zh: Translations = {
   },
 
   metals: {
-    aluminium: '铝',
-    carbon_steel: '碳钢',
-    copper: '铜',
-    iron: '铁',
-    magnesium: '镁',
+    Al: '铝',
+    Cu: '铜',
+    Fe: '铁',
+    Mg: '镁',
+  },
+
+  // TODO(i18n): English text pending translation.
+  phSources: {
+    measured: 'measured',
+    derived: 'calculated',
+    banded: 'a range',
+    missing: 'not known',
+  },
+
+  warningKinds: {
+    unsupported_metal: 'Metal',
+    extrapolation: 'Outside range',
+    unreliable_group: 'Known weakness',
+    out_of_vocabulary: 'Pooled',
   },
 }

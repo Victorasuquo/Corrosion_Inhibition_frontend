@@ -4,7 +4,7 @@ export const es: Translations = {
   meta: {
     title: 'Inhibiepdt — Predicción de la eficiencia de inhibición de la corrosión',
     description:
-      'Predice la eficiencia de inhibición de la corrosión de una molécula orgánica sobre aluminio, acero al carbono, cobre, hierro o magnesio en condiciones experimentales dadas, con un intervalo de incertidumbre calibrado y un veredicto honesto sobre el dominio de aplicabilidad.',
+      'Predict the corrosion inhibition efficiency of an organic molecule on iron, aluminium, magnesium or copper under stated experimental conditions, with a calibrated uncertainty band and an honest applicability-domain verdict.',  // TODO(i18n)
   },
 
   nav: {
@@ -20,6 +20,8 @@ export const es: Translations = {
     figures: 'Figuras',
     cite: 'Citar',
     history: 'Actividad',
+    login: 'Iniciar sesión',
+    register: 'Registrarse',
   },
 
   pages: {
@@ -58,7 +60,7 @@ export const es: Translations = {
     lead: 'Introduce una molécula y las condiciones a las que se enfrentará. Obtendrás un intervalo calibrado, no un punto engañoso — y una indicación clara de si esta química es realmente conocida por el modelo.',
 
     formTitle: 'Muestra y condiciones',
-    inputCount: '5 entradas',
+    inputCount: '11 inputs',  // TODO(i18n)
     smilesLabel: 'Molécula (SMILES)',
     gramsPerMol: 'g/mol',
     heavyAtoms: 'átomos pesados',
@@ -75,17 +77,14 @@ export const es: Translations = {
     recorded: 'registrado',
     notRecorded: 'no registrado',
     temperature: 'Temperatura',
-    temperatureHint: '283–606 K en el entrenamiento. 298 K es temperatura ambiente.',
+    temperatureHint: '283–606 K in training. 298 K is room temperature.',  // TODO(i18n)
     duration: 'Tiempo de exposición',
-    durationHint: 'Registrado en solo el 54 % del corpus.',
+    durationHint: 'Recorded for only 54% of the corpus.',  // TODO(i18n)
     concentration: 'Concentración del inhibidor',
-    concentrationHint: 'De 3×10⁻⁵ a 3280 mM; el modelo utiliza el log₁₀.',
+    concentrationHint: 'Spans 3×10⁻⁵ to 3300 mM; the model sees log₁₀.',  // TODO(i18n)
 
     submit: 'Predecir la eficiencia de inhibición',
     submitPending: 'Leyendo…',
-    phNote:
-      'El pH no es una entrada. Se conserva en el pipeline de investigación solo para análisis y nunca fue una variable del modelo.',
-
     emptyTitle: 'La lectura aparece aquí',
     emptyBody:
       'Una predicción se lee como una banda, no como un punto — igual que se lee un color contra una carta de comparación. El ancho de la banda es la incertidumbre calibrada del modelo.',
@@ -112,6 +111,40 @@ export const es: Translations = {
     no: 'No',
     trustFooter:
       'El R² citado es el que corresponde a esta consulta. La química familiar se mide con la partición aleatoria; todo lo demás, con la partición por esqueleto, más estricta.',
+
+    // TODO(i18n): the keys below carry English text pending translation.
+    saltStripped: 'Counter-ion removed',
+    contextLabel: 'Substrate & technique',
+    contextHint:
+      'Both are model inputs, and both matter: adding them lifted explained variance from 0.395 to 0.456 on unseen molecules. Pick from the lists — they are the exact values the model encodes.',
+    alloyLabel: 'Alloy designation',
+    alloyHint:
+      'Carbon steel lives here, not under metal. Grades with fewer than 30 corpus rows were pooled during training, and anything outside the list is pooled the same way.',
+    methodLabel: 'Measurement technique',
+    methodHint:
+      'Techniques disagree by tens of efficiency points, so the model is told which one you mean. Use "not stated" if you do not know — it is a real category with 1,389 rows.',
+    unreliableTag: '\u26a0',
+    synergistLabel: 'A synergistic additive is present',
+    synergistHint: 'Only 110 corpus rows record one, so this is weakly supported either way.',
+    ph: 'Electrolyte pH',
+    phHint:
+      'A model feature in this version. Negative values are real — the corpus reaches \u22121.0 in concentrated acid.',
+    phSourceLabel: 'This pH was',
+    salt: 'Supporting salt',
+    saltHint: 'Recorded for only 39% of the corpus, so leaving this unticked is normal.',
+    intervalNote:
+      'Every reading is a 90% band, never a bare number. On an unseen molecule that band is \u00b138.6 efficiency points, which is the honest width.',
+    preflightTitle: 'Before you read this',
+    explain: 'Explain',
+    close: 'Close',
+    nearestIs: 'Closest molecule in the training corpus:',
+    pooledInto: 'is not encoded individually, so it was pooled into',
+    replicateNote:
+      'For scale, two independent laboratory measurements of the same experiment differ by about {spread} efficiency points. A large part of the error is in the measurements, not the model.',
+    warningsTitle: 'Known limits on this reading',
+    warnUnreliableAlloy:
+      'the model explains no variance on this grade. It is in the study as a documented failure.',
+    warnUnreliableMethod: 'measurements made this way are the ones the model fits worst.',
 
     shapTitle: 'Qué determinó esta cifra',
     shapLead:
@@ -140,13 +173,13 @@ export const es: Translations = {
     title: 'La eficiencia depende de las condiciones. Por eso el modelo las recibe.',
     lead: 'La mayoría de los modelos estructura–propiedad publicados predicen solo a partir de la estructura molecular, mientras que la eficiencia con la que se entrenan depende de la temperatura, la concentración, la duración y el sustrato. Este proyecto conservó esas condiciones y se las entregó al modelo. Esa decisión es la investigación.',
     s1h: 'Tres conjuntos de datos, un esquema',
-    s1p: 'Inhibitor 1368, DataCor aluminio y la base Excorr: 7991 mediciones brutas armonizadas a una escala común, con SMILES canonicalizados y sales eliminadas.',
+    s1p: 'Inhibitor 1368, the DataCor aluminium set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',  // TODO(i18n)
     s2h: 'Deduplicar sin descartar las condiciones',
-    s2p: 'Un pipeline anterior promediaba cada molécula sobre todas las condiciones, reduciendo unas 8000 filas a 717. Usar como clave molécula, metal, temperatura, duración y concentración preserva las mediciones distintas y arroja 5170 filas utilizables.',
-    s3h: '220 variables',
-    s3p: '209 descriptores RDKit no constantes, más temperatura, duración, log₁₀ de la concentración, un indicador de ausencia para cada uno y un sustrato codificado one-hot.',
-    s4h: 'Dos particiones de evaluación, siempre reportadas juntas',
-    s4p: 'Validación cruzada aleatoria de cinco bloques y partición por esqueleto de Bemis–Murcko, donde las moléculas que comparten núcleo permanecen en el mismo bloque. La brecha entre ambas es el relato honesto.',
+    s2p: 'An earlier pipeline averaged each molecule across every condition, collapsing thousands of rows to 717. Keying on molecule, metal, temperature, duration, concentration and pH instead preserves distinct measurements — 8,359 of them, over 1,050 molecules on four base metals.',  // TODO(i18n)
+    s3h: '283 features',  // TODO(i18n)
+    s3p: '211 non-constant RDKit descriptors, then the context: temperature and its inverse, duration and log₁₀ duration, log₁₀ concentration, pH, log₁₀ salt concentration, a was-missing indicator for each, and one-hot encodings of base metal, alloy grade, measurement technique and pH provenance, plus a synergist flag.',  // TODO(i18n)
+    s4h: 'Two honest splits, always reported together',  // TODO(i18n)
+    s4p: 'Five-fold grouped by molecule, so no test molecule appears in training, and Bemis–Murcko scaffold five-fold, where molecules sharing a core stay in the same fold. A third, row-wise split was run as a control and is reported only to show how badly it flatters the model.',  // TODO(i18n)
     statMeasurements: 'mediciones',
     statMolecules: 'moléculas únicas',
     statMetals: 'metales',
@@ -169,9 +202,10 @@ export const es: Translations = {
     leadA: 'El modelo obtiene',
     leadB: 'en una partición aleatoria y',
     leadC: 'en una partición por esqueleto. Ambas son ciertas y responden a preguntas distintas. Citar solo la primera sería la forma más fácil de inducirte a error, y esta página se niega a hacerlo.',
-    randomTitle: 'Partición aleatoria — R² 0,806',
-    randomBody:
-      'Bloques tomados al azar. Una molécula de prueba puede ya aparecer en el entrenamiento bajo otras condiciones, así que esto mide cómo predice el modelo una nueva medición de una molécula que ya conoce. Útil, pero no es la pregunta que se hace un químico en fase de cribado.',
+    // TODO(i18n): English text pending translation.
+    groupedTitle: 'By molecule — R\u00b2 0.461',
+    groupedBody:
+      'Every measurement of a molecule is held in the same fold, so no test molecule appears in training under any conditions. This is the honest estimate for a molecule the model has not met: it explains 46% of the variance, with a typical error of 15.7 efficiency points.',
     scaffoldTitle: 'Partición por esqueleto — R² 0,310',
     scaffoldBody:
       'Las moléculas que comparten un núcleo de Bemis–Murcko permanecen en el mismo bloque, de modo que cada molécula de prueba es estructuralmente desconocida. Esto mide el rendimiento sobre química genuinamente nueva. Es la cifra que hay que citar para un candidato no ensayado, y la que este servicio usa siempre que tu molécula le resulta nueva.',
@@ -190,16 +224,19 @@ export const es: Translations = {
     structureOnly: 'Solo estructura',
     structurePlusConditions: 'Estructura + condiciones experimentales',
     structurePlusShort: 'Estructura + condiciones',
-    randomSplit: 'Partición aleatoria',
     scaffoldSplit: 'Partición por esqueleto',
-    randomSub: 'Nuevas mediciones de moléculas conocidas',
-    scaffoldSub: 'Química genuinamente nueva',
+    scaffoldSub: 'Genuinely new chemistry',  // TODO(i18n)
     r2Note: 'R² — coeficiente de determinación, de 0 a 1. Cuanto más alto, mejor.',
     splitGroup: 'Partición de evaluación',
     scaffoldExplain:
       'Las moléculas que comparten un núcleo de Bemis–Murcko permanecen en el mismo bloque, de modo que cada molécula de prueba es estructuralmente nueva. Esta es la estimación honesta para un candidato desconocido.',
-    randomExplain:
-      'Los bloques se toman al azar, así que una molécula de prueba puede ya figurar en el entrenamiento bajo otras condiciones. Esto mide nuevas mediciones, no química nueva.',
+    groupedSplit: 'By molecule',
+    groupedSub: 'Molecules absent from training',
+    groupedExplain:
+      'Every measurement of a molecule is held in the same fold, so no test molecule appears in training under any conditions. This is the honest estimate for a molecule the model has not seen.',
+    colStep: 'Feature block added',
+    colFeatures: 'cols',
+    colMarginal: '\u0394 R\u00b2',
     colModel: 'Modelo',
     colRepresentation: 'Representación',
     colMae: 'MAE',
@@ -238,18 +275,18 @@ export const es: Translations = {
     leadA: 'Cada punto aquí es uno que un examinador tendría que encontrar por su cuenta. Una incertidumbre calibrada de',
     leadB: 'puntos de eficiencia con una cobertura empírica del',
     leadC: 'es amplia — y declararlo con claridad es precisamente la intención.',
-    l1h: 'La brecha por esqueleto es grande y no se cerró',
-    l1p: 'Las condiciones elevaron el R² por esqueleto de 0,124 a 0,310: real, pero muy por debajo del 0,806 de la partición aleatoria. Conocer las condiciones no sustituye a haber visto la química.',
-    l2h: 'Falta la duración en el 46 % del corpus',
-    l2p: 'La imputación con indicador de ausencia es contabilidad honesta, pero no puede recuperar información que nunca se midió.',
-    l3h: 'El pH se excluye por diseño',
-    l3p: 'Solo está registrado en el 32 % de las filas y se conserva únicamente para análisis. Incluirlo habría supuesto imputar la mayoría de la columna.',
-    l4h: 'El hierro y el acero al carbono siguen separados',
-    l4p: 'El acero al carbono es a base de hierro y ambos suelen ensayarse en medio ácido, pero las fuentes no registran la distinción de forma fiable. Fusionarlos en un único grupo ferroso es una decisión científica abierta, deliberadamente sin resolver.',
-    l5h: 'El ajuste fueron 10 ensayos, no validación cruzada anidada',
-    l5p: 'Una búsqueda Optuna directa sobre el objetivo por esqueleto. La curva de ajuste se mantuvo plana en todos los ensayos, así que el modelo no está limitado por sus hiperparámetros — pero la metodología califica la validación cruzada anidada como prevista, no realizada.',
-    l6h: 'Esto no sustituye a los ensayos',
-    l6p: 'Es un demostrador de investigación para cribado y clasificación. Las mediciones de pérdida de masa y electroquímicas siguen siendo la evidencia.',
+    l1h: 'The band is wider than the answer',  // TODO(i18n)
+    l1p: 'The 90% interval is ±38.6 efficiency points on an unseen molecule. That is honest, and it is also wide enough that this model ranks candidates rather than measuring them. Treat any single number as a position in a queue.',  // TODO(i18n)
+    l2h: 'Some groups fail outright',  // TODO(i18n)
+    l2p: 'On the alloys recorded as Cold rolled steel, Stainless steel, Fe, Steel and AA1100, and on gravimetric, polarisation-resistance and current-density measurements, the model explains no variance at all. Those readings are flagged where they occur rather than quietly averaged into the headline.',  // TODO(i18n)
+    l3h: 'Much of the context was never recorded',  // TODO(i18n)
+    l3p: 'Duration is absent for a third of the corpus and supporting salt concentration for 61%. A was-missing indicator is honest bookkeeping, but it cannot recover information nobody measured.',  // TODO(i18n)
+    l4h: 'pH was recovered, not measured',  // TODO(i18n)
+    l4p: 'pH became a feature in this version, but only 49% of values were measured directly — the rest were calculated from the stated corrodent or inferred as a band. The model is told which, and on its own the provenance block slightly lowered accuracy rather than raising it.',  // TODO(i18n)
+    l5h: 'The reported tuning is not nested cross-validation',  // TODO(i18n)
+    l5p: 'Nested CV was implemented but not executed in the reported run; the served hyperparameters come from a direct 10-trial search against the scaffold objective. The tuned figures should be read as optimistic by an unmeasured margin, which is why the untuned benchmark carries the comparative conclusions.',  // TODO(i18n)
+    l6h: 'Validated against the literature, not against a bench',  // TODO(i18n)
+    l6p: 'Every figure here is measured against the published record. The comparison against this project’s own laboratory measurements has not been done. Weight-loss and electrochemical testing remain the evidence.',  // TODO(i18n)
   },
 
   batch: {
@@ -323,9 +360,12 @@ export const es: Translations = {
     dataBody: 'El corpus se armonizó a partir de tres conjuntos de datos públicos. Pertenecen a sus autores originales y aquí se enlazan en lugar de redistribuirse.',
     dataGapTitle: 'Referencias aún en rastreo',
     dataGapBody: 'Las publicaciones originales de estos tres conjuntos aún no se han confirmado, así que no se imprime ninguna referencia aquí en lugar de imprimir una que podría ser errónea. Si usas el corpus, rastrea cada conjunto hasta su publicación fuente y cítala directamente.',
-    dsInhibitor: '1364 entradas de acero al carbono en HCl 1 M, con descriptores cuánticos.',
-    dsDatacor: '2011 mediciones en diecisiete sustratos de aluminio, con condiciones por fila.',
-    dsExcorr: '4616 entradas que abarcan hierro, aluminio, magnesio, cobre y cinc.',
+    dsInhibitor:
+      '1,364 entries for carbon steel in 1 M HCl, with quantum-chemical descriptors.',  // TODO(i18n)
+    dsDatacor:
+      'The CORDATA multi-metal export: 5,000 rows across seventeen fields, covering aluminium, copper, iron, magnesium and zinc, with per-row conditions.',  // TODO(i18n)
+    dsExcorr:
+      '4,616 entries spanning iron, aluminium, magnesium, copper and zinc.',  // TODO(i18n)
     citationPending: 'Referencia pendiente',
 
     licenceEyebrow: 'Términos',
@@ -347,10 +387,24 @@ export const es: Translations = {
   },
 
   metals: {
-    aluminium: 'Aluminio',
-    carbon_steel: 'Acero al carbono',
-    copper: 'Cobre',
-    iron: 'Hierro',
-    magnesium: 'Magnesio',
+    Al: 'Aluminio',
+    Cu: 'Cobre',
+    Fe: 'Hierro',
+    Mg: 'Magnesio',
+  },
+
+  // TODO(i18n): English text pending translation.
+  phSources: {
+    measured: 'measured',
+    derived: 'calculated',
+    banded: 'a range',
+    missing: 'not known',
+  },
+
+  warningKinds: {
+    unsupported_metal: 'Metal',
+    extrapolation: 'Outside range',
+    unreliable_group: 'Known weakness',
+    out_of_vocabulary: 'Pooled',
   },
 }

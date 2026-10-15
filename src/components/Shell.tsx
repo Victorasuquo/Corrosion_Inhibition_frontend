@@ -44,6 +44,18 @@ export function Masthead({ t }: { t: Translations }) {
           ))}
           <LanguageSwitcher />
           <Link
+            to="/login"
+            className="patch-label text-ink-2 transition-colors hover:text-ink"
+          >
+            {t.nav.login}
+          </Link>
+          <Link
+            to="/register"
+            className="patch-label border border-ink px-3 py-2 text-ink transition-colors hover:bg-card-2"
+          >
+            {t.nav.register}
+          </Link>
+          <Link
             to="/predict"
             className="patch-label bg-ink px-3 py-2 text-card transition-opacity hover:opacity-90"
           >

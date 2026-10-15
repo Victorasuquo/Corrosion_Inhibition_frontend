@@ -37,9 +37,10 @@ export default function PredictPage({ t, model }: Props) {
 
         {model && (
           <p className="mt-6 font-mono text-xs text-ink-3" dir="ltr">
-            {t.method.serving} v{model.version} · R² {model.performance.random_split.r2} (
-            {t.charts.randomSplit}) · R² {model.performance.scaffold_split.r2} (
-            {t.charts.scaffoldSplit}) · ±{model.calibration.half_width_ie_points}
+            {t.method.serving} v{model.version} · R²{' '}
+            {model.performance.grouped_molecule.r2} ({t.charts.groupedSplit}) · R²{' '}
+            {model.performance.scaffold_split.r2} ({t.charts.scaffoldSplit}) · ±
+            {model.calibration.half_width_ie_points}
           </p>
         )}
       </Section>

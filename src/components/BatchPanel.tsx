@@ -4,11 +4,19 @@ import { ApiError, api, type BatchResult } from '@/lib/api'
 import { DOMAIN_COLOR, rampColor } from '@/lib/ramp'
 import { useT } from '@/i18n'
 
-const TEMPLATE = `smiles,metal,temperature_k,duration_h,concentration_mm
-c1ccc2[nH]nnc2c1,carbon_steel,298.15,6,1.0
-NC(N)=S,iron,303.15,24,10
-Oc1cccc2cccnc12,aluminium,298.15,24,5
-Cn1cnc2c1c(=O)n(C)c(=O)n2C,carbon_steel,303.15,4,2
+/**
+ * The template offered for download.
+ *
+ * Only `smiles` is strictly required. Omitting alloy, methodology or ph_source is safe
+ * because their defaults — unspecified, not stated, missing — are real categories the model
+ * was trained on, so a sparse row is encoded exactly as the corresponding corpus rows were.
+ */
+const TEMPLATE = `smiles,metal,alloy,methodology,ph_source,temperature_k,duration_h,concentration_mm,ph,salt_concentration_m,synergist_present
+c1ccc2[nH]nnc2c1,Al,AA2024,impedance spectroscopy,measured,293,24,0.5,7,0.05,0
+Nc1n[nH]c(S)n1,Al,AA2024,optical,measured,298,24,1,4,0.1,0
+CCN(CC)C(=S)S,Cu,Cu,impedance spectroscopy,measured,298,24,1,7,0.05,0
+O=N[O-],Mg,AZ31,hydrogen evolution,measured,296,20,50,7,0.09,0
+NC(N)=S,Fe,Carbon steel,potentiodynamic polarisation,derived,303.15,24,10,0,,0
 `
 
 /**

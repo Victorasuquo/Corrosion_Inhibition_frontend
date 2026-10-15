@@ -14,6 +14,7 @@ import FiguresPage from '@/pages/FiguresPage'
 import CitePage from '@/pages/CitePage'
 import HistoryPage from '@/pages/HistoryPage'
 import NotFoundPage from '@/pages/NotFoundPage'
+import { AdminPage, DashboardPage, ForgotPasswordPage, LoginPage, MessageThreadPage, ProtectedRoute, RegisterPage, ResetPasswordPage, VerifyEmailPage } from '@/pages/PlatformPages'
 
 export default function App() {
   const [model, setModel] = useState<ModelInfo | null>(null)
@@ -50,6 +51,14 @@ export default function App() {
           <Route path="/figures" element={<FiguresPage t={t} />} />
           <Route path="/cite" element={<CitePage t={t} model={model} />} />
           <Route path="/history" element={<HistoryPage t={t} />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/dashboard/messages/:threadId" element={<ProtectedRoute><MessageThreadPage /></ProtectedRoute>} />
+          <Route path="/dashboard/*" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
           <Route path="*" element={<NotFoundPage t={t} />} />
         </Routes>
       </main>
@@ -63,6 +72,7 @@ function ScrollToTop() {
   const { pathname } = useLocation()
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+    void api.visit(pathname)
   }, [pathname])
   return null
 }

@@ -132,12 +132,12 @@ function Method({ t, model }: { t: Translations; model: ModelInfo | null }) {
     { n: '04', h: t.method.s4h, p: t.method.s4p },
   ]
   const stats = [
-    ['5,170', t.method.statMeasurements],
-    ['945', t.method.statMolecules],
-    ['5', t.method.statMetals],
-    ['209', t.method.statDescriptors],
-    ['11', t.method.statConditions],
-    ['0', t.method.statPh],
+    ['8,359', t.method.statMeasurements],
+    ['1,050', t.method.statMolecules],
+    ['4', t.method.statMetals],
+    ['211', t.method.statDescriptors],
+    ['72', t.method.statConditions],
+    ['11', t.method.statPh],
   ]
 
   return (
@@ -206,16 +206,16 @@ function Results({
       title={t.results.title}
       lead={
         <>
-          {t.results.leadA} <strong className="font-mono text-ink">R² 0.806</strong>{' '}
-          {t.results.leadB} <strong className="font-mono text-ink">R² 0.310</strong>{' '}
+          {t.results.leadA} <strong className="font-mono text-ink">R² 0.461</strong>{' '}
+          {t.results.leadB} <strong className="font-mono text-ink">R² 0.398</strong>{' '}
           {t.results.leadC}
         </>
       }
     >
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="panel registered p-6 sm:p-7">
-          <h3 className="patch-label mb-4 text-ink-3">{t.results.randomTitle}</h3>
-          <p className="text-sm leading-relaxed text-ink-2">{t.results.randomBody}</p>
+          <h3 className="patch-label mb-4 text-ink-3">{t.results.groupedTitle}</h3>
+          <p className="text-sm leading-relaxed text-ink-2">{t.results.groupedBody}</p>
         </div>
         <div className="panel registered p-6 sm:p-7" style={{ borderColor: '#008751' }}>
           <h3 className="patch-label mb-4" style={{ color: '#008751' }}>
@@ -235,7 +235,7 @@ function Results({
         <div className="panel p-6 sm:p-7">
           <h3 className="mb-1 font-display text-lg font-700">{t.results.leaderboardTitle}</h3>
           <p className="mb-6 text-sm text-ink-2">{t.results.leaderboardLead}</p>
-          {model ? <Leaderboard rows={model.all_models} /> : <Placeholder t={t} error={modelError} />}
+          {model ? <Leaderboard leaderboard={model.leaderboard} /> : <Placeholder t={t} error={modelError} />}
         </div>
       </div>
     </Section>

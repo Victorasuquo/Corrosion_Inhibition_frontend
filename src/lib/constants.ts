@@ -18,61 +18,173 @@ export const ATTRIBUTION = {
 export const THESIS_TITLE =
   'An Artificial Intelligence Driven Quantitative Structure–Property Relationship Framework for the Prediction of Organic Corrosion Inhibition Efficiency'
 
-/** Substrates the model was trained on. Order matches the model's one-hot encoding. */
+/**
+ * The four base metals the model was trained on, with their corpus row counts.
+ *
+ * Zinc is absent on purpose: it had 33 rows, below the 40-row threshold the run required of
+ * a metal group, so it is not served. Carbon steel is also absent — it is not a base metal
+ * here but an *alloy* designation of iron, which is how the corpus records it and how the
+ * model encodes it. Order matches the model's one-hot encoding.
+ */
 export const METALS = [
-  { value: 'aluminium', label: 'Aluminium', rows: 2019 },
-  { value: 'carbon_steel', label: 'Carbon steel', rows: 1342 },
-  { value: 'copper', label: 'Copper', rows: 169 },
-  { value: 'iron', label: 'Iron', rows: 1436 },
-  { value: 'magnesium', label: 'Magnesium', rows: 204 },
+  { value: 'Al', label: 'Aluminium', rows: 2783 },
+  { value: 'Cu', label: 'Copper', rows: 431 },
+  { value: 'Fe', label: 'Iron', rows: 3514 },
+  { value: 'Mg', label: 'Magnesium', rows: 1631 },
 ] as const
 
 export type MetalValue = (typeof METALS)[number]['value']
 
 /**
- * Real inhibitors from the training corpus, for one-click loading.
+ * Where a pH value came from. The model is told this so it can discount an inferred value
+ * rather than treating every pH as equally certain.
+ */
+export const PH_SOURCES = [
+  { value: 'measured', label: 'Measured' },
+  { value: 'derived', label: 'Calculated from the medium' },
+  { value: 'banded', label: 'Only a range was known' },
+  { value: 'missing', label: 'Not known' },
+] as const
+
+export type PhSourceValue = (typeof PH_SOURCES)[number]['value']
+
+/**
+ * Defaults used when a value is genuinely unknown.
  *
- * These are prefills of the same five variables the model takes — not extra inputs.
- * Someone who cannot write SMILES can still drive the instrument.
+ * These are not placeholders — each is a real category with real support in the training
+ * corpus (335 rows recorded as `unspecified`, 1,389 as `not stated`, 43 as `missing`), so a
+ * request that uses them is encoded exactly as those rows were.
+ */
+export const UNKNOWN_DEFAULTS = {
+  alloy: 'unspecified',
+  methodology: 'not stated',
+  ph_source: 'missing',
+} as const
+
+/** Buckets a value outside the model's vocabulary is pooled into. */
+export const POOLED_LABELS = {
+  alloy: 'other_alloy',
+  method: 'other_method',
+} as const
+
+/**
+ * Real rows from the training corpus, for one-click loading.
+ *
+ * Every field is taken from an actual measurement, so each prefill is in-domain, carries a
+ * valid alloy, technique and pH provenance, and has a known observed efficiency to compare
+ * the prediction against. One example per base metal.
  */
 export const EXAMPLES = [
   {
     name: 'Benzotriazole',
     smiles: 'c1ccc2[nH]nnc2c1',
     note: 'The reference copper and steel inhibitor. Widely used industrially.',
-    metal: 'carbon_steel' as MetalValue,
-    temperature_k: 298.15,
-    duration_h: 6,
-    concentration_mm: 1,
+    metal: 'Al' as MetalValue,
+    alloy: 'AA2024',
+    methodology: 'impedance spectroscopy',
+    ph_source: 'measured' as PhSourceValue,
+    temperature_k: 293,
+    duration_h: 24,
+    concentration_mm: 0.5,
+    ph: 7,
+    salt_concentration_m: 0.05,
+    observed: 97.95,
   },
   {
-    name: 'Thiourea',
-    smiles: 'NC(N)=S',
-    note: 'Classic sulfur-donor inhibitor for steel in acid service.',
-    metal: 'iron' as MetalValue,
-    temperature_k: 303.15,
+    name: '3-Amino-5-mercapto-1,2,4-triazole',
+    smiles: 'Nc1n[nH]c(S)n1',
+    note: 'Triazole thiol on aluminium alloy 2024. Complete protection in the corpus.',
+    metal: 'Al' as MetalValue,
+    alloy: 'AA2024',
+    methodology: 'optical',
+    ph_source: 'measured' as PhSourceValue,
+    temperature_k: 298,
     duration_h: 24,
-    concentration_mm: 10,
+    concentration_mm: 1,
+    ph: 4,
+    salt_concentration_m: 0.1,
+    observed: 100,
+  },
+  {
+    name: 'Diethyldithiocarbamic acid',
+    smiles: 'CCN(CC)C(=S)S',
+    note: 'Sulfur-donor chelator on copper in near-neutral chloride.',
+    metal: 'Cu' as MetalValue,
+    alloy: 'Cu',
+    methodology: 'impedance spectroscopy',
+    ph_source: 'measured' as PhSourceValue,
+    temperature_k: 298,
+    duration_h: 24,
+    concentration_mm: 1,
+    ph: 7,
+    salt_concentration_m: 0.05,
+    observed: 99.3,
   },
   {
     name: '8-Hydroxyquinoline',
     smiles: 'Oc1cccc2cccnc12',
     note: 'Chelating N,O-donor studied on aluminium alloys.',
-    metal: 'aluminium' as MetalValue,
-    temperature_k: 298.15,
+    metal: 'Al' as MetalValue,
+    alloy: 'AA2024',
+    methodology: 'optical',
+    ph_source: 'measured' as PhSourceValue,
+    temperature_k: 298,
     duration_h: 24,
-    concentration_mm: 5,
+    concentration_mm: 1,
+    ph: 4,
+    salt_concentration_m: 0.1,
+    observed: 50,
   },
   {
-    name: 'Caffeine',
-    smiles: 'Cn1cnc2c1c(=O)n(C)c(=O)n2C',
-    note: 'A green inhibitor — non-toxic, plant-derived, actively researched.',
-    metal: 'carbon_steel' as MetalValue,
-    temperature_k: 303.15,
-    duration_h: 4,
-    concentration_mm: 2,
+    name: 'Potassium nitrite',
+    smiles: 'O=N[O-]',
+    note: 'Inorganic inhibitor on magnesium AZ31, measured by hydrogen evolution.',
+    metal: 'Mg' as MetalValue,
+    alloy: 'AZ31',
+    methodology: 'hydrogen evolution',
+    ph_source: 'measured' as PhSourceValue,
+    temperature_k: 296,
+    duration_h: 20,
+    concentration_mm: 50,
+    ph: 7,
+    salt_concentration_m: 0.09,
+    observed: 95,
+  },
+  {
+    name: 'Thiourea',
+    smiles: 'NC(N)=S',
+    note: 'Classic sulfur donor — but on AA1100 by gravimetry, where the model is weakest. Loads the warnings.',
+    metal: 'Al' as MetalValue,
+    alloy: 'AA1100',
+    methodology: 'gravimetric',
+    ph_source: 'measured' as PhSourceValue,
+    temperature_k: 298,
+    duration_h: 144,
+    concentration_mm: 660,
+    ph: -0.14,
+    salt_concentration_m: null,
+    observed: 28.59,
   },
 ] as const
+
+/**
+ * The honest performance figures, for places that render before /api/v1/model resolves.
+ *
+ * There is a third figure in the research notebook — R² 0.817 — from a control split in
+ * which 94.5% of test molecules had already been seen in training. It is not here, and it is
+ * stripped out of the served artefact, because quoting it is the specific thing this study
+ * exists to argue against.
+ */
+export const PERFORMANCE = {
+  groupedMolecule: { r2: 0.461, mae: 15.65, rmse: 21.45, spearman: 0.687 },
+  scaffold: { r2: 0.398, mae: 17.34, rmse: 22.24, spearman: 0.61 },
+  intervalHalfWidth: 38.61,
+  intervalCoverage: 0.926,
+  /** Two independent laboratory measurements of the same experiment differ by about this. */
+  replicateSpread: 8.8,
+  rows: 8359,
+  molecules: 1050,
+} as const
 
 /** Sources for the global corrosion figures quoted on the page. */
 export const CITATIONS = {

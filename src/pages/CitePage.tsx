@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import type { ModelInfo } from '@/lib/api'
-import { ATTRIBUTION, PRODUCT_NAME, THESIS_TITLE } from '@/lib/constants'
+import { ATTRIBUTION, PERFORMANCE, PRODUCT_NAME, THESIS_TITLE } from '@/lib/constants'
 import type { Translations } from '@/i18n/config'
 import { Section } from '@/components/Shell'
 
@@ -23,15 +23,15 @@ export default function CitePage({ t, model }: Props) {
   const year = new Date().getFullYear()
   const accessed = new Date().toISOString().slice(0, 10)
   const site = typeof window !== 'undefined' ? window.location.origin : ''
-  const version = model?.version ?? '1.0.0'
+  const version = model?.version ?? '2.0.0'
   const hash = model?.provenance.artifact_hashes['model.joblib'] ?? '—'
-  const run = model?.provenance.source_run ?? 'run_20260814_130021'
+  const run = model?.provenance.source_run ?? 'run_20260923_134752'
   const seed = model?.provenance.seed ?? 42
-  const rdkit = model?.provenance.rdkit_runtime ?? '2024.09.4'
-  const sklearn = model?.provenance.pins['scikit-learn'] ?? '1.6.1'
-  const randomR2 = model?.performance.random_split.r2 ?? 0.806
-  const scaffoldR2 = model?.performance.scaffold_split.r2 ?? 0.31
-  const halfWidth = model?.calibration.half_width_ie_points ?? 19.52
+  const rdkit = model?.provenance.rdkit_runtime ?? '2026.03.6'
+  const sklearn = model?.provenance.pins['scikit-learn'] ?? '1.8.0'
+  const groupedR2 = model?.performance.grouped_molecule.r2 ?? PERFORMANCE.groupedMolecule.r2
+  const scaffoldR2 = model?.performance.scaffold_split.r2 ?? PERFORMANCE.scaffold.r2
+  const halfWidth = model?.calibration.half_width_ie_points ?? PERFORMANCE.intervalHalfWidth
 
   const surname = ATTRIBUTION.author.split(' ').slice(-1)[0]
   const initials = ATTRIBUTION.author
@@ -61,15 +61,25 @@ export default function CitePage({ t, model }: Props) {
   note    = {Model artefact SHA-256 {${hash}}}
 }`
 
+  const rows = model?.training.rows ?? PERFORMANCE.rows
+  const molecules = model?.training.molecules ?? PERFORMANCE.molecules
+
   const reproducibility = `Predictions were obtained with ${PRODUCT_NAME} v${version} (${site}, accessed ${accessed}).
-The served model is a random forest over 220 features (209 non-constant RDKit
-descriptors plus 11 experimental-condition features), trained on 5,170 measurements
-of 945 molecules across five metals, from run ${run} with seed ${seed}.
-Reported performance is R2 = ${randomR2} under a random five-fold split and
-R2 = ${scaffoldR2} under a Bemis-Murcko scaffold five-fold split; the scaffold figure
-is the appropriate estimate for structurally novel candidates. Predictions carry
-split-conformal intervals of +/-${halfWidth} inhibition-efficiency points at 90% nominal
-coverage. Featurisation used RDKit ${rdkit} and scikit-learn ${sklearn}.
+The served model is a random forest (250 trees, maximum depth 31) over 283 features:
+211 non-constant RDKit descriptors, seven numeric experimental conditions with their
+missingness indicators, and one-hot encodings of base metal, alloy designation,
+measurement methodology and pH provenance, plus a synergist flag. It was trained on
+${rows.toLocaleString()} measurements of ${molecules.toLocaleString()} molecules across four base metals
+(Al, Cu, Fe, Mg), from run ${run} with seed ${seed}.
+Reported performance is R2 = ${groupedR2} under a five-fold split grouped by molecule,
+so that no test molecule appears in training, and R2 = ${scaffoldR2} under a
+Bemis-Murcko scaffold five-fold split, which is the appropriate estimate for a
+structurally novel candidate. A third figure of R2 = 0.817 appears in the research
+notebook; it comes from a row-wise control split in which 94.5% of test molecules had
+already been seen in training and is not a valid estimate of generalisation.
+Predictions carry split-conformal intervals of +/-${halfWidth} inhibition-efficiency
+points at 90% nominal coverage (${((model?.calibration.empirical_coverage ?? PERFORMANCE.intervalCoverage) * 100).toFixed(1)}% empirical).
+Featurisation used RDKit ${rdkit} and scikit-learn ${sklearn}.
 Model artefact SHA-256: ${hash}.`
 
   return (

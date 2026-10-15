@@ -13,77 +13,109 @@ interface AblationProps {
 }
 
 /**
- * Grouped bars: the same random forest, with and without experimental conditions,
- * under both evaluation splits.
+ * The cumulative ablation: what each block of features actually bought.
  *
- * Two series, direct-labelled and legended. One axis (R²), never two.
+ * Both honest splits are shown together, because the gap between them *is* the finding. The
+ * row-wise control split is not an option here — it is stripped from the served artefact.
+ *
+ * One axis (R²), one bar per step, direct-labelled. The marginal column is the change on
+ * adding that block, which is the number the thesis argues from.
  */
 export function AblationChart({ ablation }: AblationProps) {
   const t = useT()
-  const groups = [
-    {
-      split: t.charts.randomSplit,
-      sub: t.charts.randomSub,
-      without: ablation.descriptors_only.random_split_r2,
-      with: ablation.descriptors_plus_conditions.random_split_r2,
-    },
-    {
-      split: t.charts.scaffoldSplit,
-      sub: t.charts.scaffoldSub,
-      without: ablation.descriptors_only.scaffold_split_r2,
-      with: ablation.descriptors_plus_conditions.scaffold_split_r2,
-    },
-  ]
+  const [split, setSplit] = useState<'grouped_molecule' | 'scaffold'>('grouped_molecule')
 
-  const max = 1
-  const pct = (v: number) => `${Math.max(0, (v / max) * 100)}%`
+  const steps = ablation.filter((row) => row.split === split)
+  if (steps.length === 0) return null
+
+  const pct = (value: number) => `${Math.max(0, Math.min(1, value)) * 100}%`
 
   return (
     <div>
-      <div className="mb-5 flex flex-wrap items-center gap-x-6 gap-y-2">
-        <Legend swatch={CATEGORICAL[1]} label={t.charts.structureOnly} />
-        <Legend swatch={CATEGORICAL[0]} label={t.charts.structurePlusConditions} />
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
+        <SplitToggle value={split} onChange={setSplit} />
+        <span className="text-xs text-ink-3">
+          {split === 'grouped_molecule' ? t.charts.groupedSub : t.charts.scaffoldSub}
+        </span>
       </div>
 
-      <div className="space-y-7">
-        {groups.map((g) => (
-          <div key={g.split}>
-            <div className="mb-2.5 flex flex-wrap items-baseline justify-between gap-x-4">
-              <h4 className="font-display text-sm font-700">{g.split}</h4>
-              <span className="text-xs text-ink-3">{g.sub}</span>
+      <div className="space-y-2">
+        {steps.map((step, index) => {
+          const previous = index === 0 ? null : steps[index - 1]
+          const marginal = previous === null ? null : step.r2 - previous.r2
+          return (
+            <div key={step.step} className="flex items-center gap-3">
+              <span className="w-[8.5rem] shrink-0 text-xs text-ink-2">{step.step}</span>
+              <span className="w-12 shrink-0 text-right font-mono text-[11px] text-ink-3 tabular">
+                {step.n_features.toLocaleString()}
+              </span>
+              <div className="relative h-6 flex-1 bg-card-2">
+                <div
+                  className="h-full"
+                  style={{ width: pct(step.r2), backgroundColor: CATEGORICAL[0] }}
+                />
+              </div>
+              <span className="w-14 shrink-0 text-right font-mono text-sm font-500 tabular">
+                {step.r2.toFixed(3)}
+              </span>
+              <span
+                className={`w-14 shrink-0 text-right font-mono text-xs tabular ${
+                  marginal === null
+                    ? 'text-ink-3'
+                    : marginal >= 0
+                      ? 'text-ink-2'
+                      : 'text-ie-00'
+                }`}
+              >
+                {marginal === null ? '—' : `${marginal >= 0 ? '+' : ''}${marginal.toFixed(3)}`}
+              </span>
             </div>
-
-            <div className="space-y-1.5">
-              {(
-                [
-                  { label: t.charts.structureOnly, value: g.without, color: CATEGORICAL[1] },
-                  {
-                    label: t.charts.structurePlusShort,
-                    value: g.with,
-                    color: CATEGORICAL[0],
-                  },
-                ] as const
-              ).map((bar) => (
-                <div key={bar.label} className="flex items-center gap-3">
-                  <div className="relative h-7 flex-1 bg-card-2">
-                    <div
-                      className="h-full"
-                      style={{ width: pct(bar.value), backgroundColor: bar.color }}
-                    />
-                  </div>
-                  <span className="w-14 shrink-0 text-right font-mono text-sm font-500 tabular">
-                    {bar.value.toFixed(3)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
-      <p className="mt-5 border-t border-rule pt-3 font-mono text-xs text-ink-3 tabular">
-        {t.charts.r2Note}
-      </p>
+      <div className="mt-3 flex items-center gap-3 border-t border-rule pt-2 text-[11px] text-ink-3">
+        <span className="w-[8.5rem] shrink-0">{t.charts.colStep}</span>
+        <span className="w-12 shrink-0 text-right">{t.charts.colFeatures}</span>
+        <span className="flex-1" />
+        <span className="w-14 shrink-0 text-right">R²</span>
+        <span className="w-14 shrink-0 text-right">{t.charts.colMarginal}</span>
+      </div>
+
+      <p className="mt-4 font-mono text-xs text-ink-3 tabular">{t.charts.r2Note}</p>
+    </div>
+  )
+}
+
+/** Shared control: the only two evaluation schemes this service will quote. */
+function SplitToggle({
+  value,
+  onChange,
+}: {
+  value: 'grouped_molecule' | 'scaffold'
+  onChange: (next: 'grouped_molecule' | 'scaffold') => void
+}) {
+  const t = useT()
+  return (
+    <div className="inline-flex border border-rule" role="group" aria-label={t.charts.splitGroup}>
+      {(
+        [
+          ['grouped_molecule', t.charts.groupedSplit],
+          ['scaffold', t.charts.scaffoldSplit],
+        ] as const
+      ).map(([key, label]) => (
+        <button
+          key={key}
+          type="button"
+          onClick={() => onChange(key)}
+          aria-pressed={value === key}
+          className={`patch-label px-3.5 py-2 transition-colors ${
+            value === key ? 'bg-ink text-card' : 'bg-card text-ink-2 hover:bg-card-2'
+          }`}
+        >
+          {label}
+        </button>
+      ))}
     </div>
   )
 }
@@ -101,51 +133,23 @@ function Legend({ swatch, label }: { swatch: string; label: string }) {
 /* Model leaderboard                                                           */
 /* -------------------------------------------------------------------------- */
 
-type Row = ModelInfo['all_models'][number]
-
-export function Leaderboard({ rows }: { rows: Row[] }) {
+/**
+ * Every model in the benchmark, under whichever honest scheme is selected.
+ *
+ * The service serves only these two. Fourteen configurations were trained; the point of the
+ * table is that they cluster — no architecture escapes the ceiling the data imposes.
+ */
+export function Leaderboard({ leaderboard }: { leaderboard: ModelInfo['leaderboard'] }) {
   const t = useT()
-  const [split, setSplit] = useState<'random' | 'scaffold'>('scaffold')
+  const [split, setSplit] = useState<'grouped_molecule' | 'scaffold'>('grouped_molecule')
 
-  const filtered = rows
-    .filter((r) =>
-      split === 'scaffold'
-        ? r.split === 'scaffold'
-        : r.split === 'random' || r.split === 'random_fold0',
-    )
-    .sort((a, b) => b.r2 - a.r2)
-
+  const filtered = [...(leaderboard[split] ?? [])].sort((a, b) => b.r2 - a.r2)
   const families = [...new Set(filtered.map((r) => r.family))]
 
   return (
     <div>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
-        <div
-          className="inline-flex border border-rule"
-          role="group"
-          aria-label={t.charts.splitGroup}
-        >
-          {(
-            [
-              ['scaffold', t.charts.scaffoldSplit],
-              ['random', t.charts.randomSplit],
-            ] as const
-          ).map(([key, label]) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setSplit(key)}
-              aria-pressed={split === key}
-              className={`patch-label px-3.5 py-2 transition-colors ${
-                split === key
-                  ? 'bg-ink text-card'
-                  : 'bg-card text-ink-2 hover:bg-card-2'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <SplitToggle value={split} onChange={setSplit} />
 
         <div className="flex flex-wrap gap-x-4 gap-y-1.5">
           {families.map((f) => (
@@ -155,7 +159,7 @@ export function Leaderboard({ rows }: { rows: Row[] }) {
       </div>
 
       <p className="mb-4 text-sm text-ink-2">
-        {split === 'scaffold' ? t.charts.scaffoldExplain : t.charts.randomExplain}
+        {split === 'scaffold' ? t.charts.scaffoldExplain : t.charts.groupedExplain}
       </p>
 
       <div className="overflow-x-auto">
@@ -178,7 +182,7 @@ export function Leaderboard({ rows }: { rows: Row[] }) {
               const width = `${Math.max(0, Math.min(1, r.r2)) * 100}%`
               return (
                 <tr
-                  key={`${r.model}-${r.rep}-${r.split}-${i}`}
+                  key={`${r.model}-${r.representation}-${i}`}
                   className="border-b border-rule last:border-0"
                 >
                   <td className="py-2.5 pr-3">
@@ -191,7 +195,9 @@ export function Leaderboard({ rows }: { rows: Row[] }) {
                       {MODEL_LABEL[r.model] ?? r.model}
                     </span>
                   </td>
-                  <td className="py-2.5 pr-3 text-ink-2">{REP_LABEL[r.rep] ?? r.rep}</td>
+                  <td className="py-2.5 pr-3 text-ink-2">
+                    {REP_LABEL[r.representation] ?? r.representation}
+                  </td>
                   <td className="py-2.5 pr-3 text-right font-mono font-500 tabular">
                     {r.r2.toFixed(3)}
                   </td>

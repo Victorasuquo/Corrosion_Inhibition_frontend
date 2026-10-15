@@ -4,7 +4,7 @@ export const ar: Translations = {
   meta: {
     title: 'Inhibiepdt — التنبؤ بكفاءة تثبيط التآكل',
     description:
-      'تنبّأ بكفاءة تثبيط التآكل لجزيء عضوي على الألومنيوم أو الفولاذ الكربوني أو النحاس أو الحديد أو المغنيسيوم في ظروف تجريبية محدّدة، مع نطاق عدم يقين معايَر وحكم صريح على نطاق قابلية التطبيق.',
+      'Predict the corrosion inhibition efficiency of an organic molecule on iron, aluminium, magnesium or copper under stated experimental conditions, with a calibrated uncertainty band and an honest applicability-domain verdict.',  // TODO(i18n)
   },
 
   nav: {
@@ -20,6 +20,8 @@ export const ar: Translations = {
     figures: 'الأشكال',
     cite: 'الاستشهاد',
     history: 'النشاط',
+    login: 'تسجيل الدخول',
+    register: 'إنشاء حساب',
   },
 
   pages: {
@@ -58,7 +60,7 @@ export const ar: Translations = {
     lead: 'أدخل جزيئًا والظروف التي سيتعرّض لها. ستحصل على نطاق معايَر لا على نقطة مضلِّلة — مع بيان صريح لما إذا كانت هذه كيمياء يعرفها النموذج فعلًا.',
 
     formTitle: 'العيّنة والظروف',
-    inputCount: '٥ مدخلات',
+    inputCount: '11 inputs',  // TODO(i18n)
     smilesLabel: 'الجزيء (SMILES)',
     gramsPerMol: 'غ/مول',
     heavyAtoms: 'ذرة ثقيلة',
@@ -75,17 +77,14 @@ export const ar: Translations = {
     recorded: 'مسجَّل',
     notRecorded: 'غير مسجَّل',
     temperature: 'درجة الحرارة',
-    temperatureHint: '٢٨٣–٦٠٦ كلفن في التدريب. ٢٩٨ كلفن هي حرارة الغرفة.',
+    temperatureHint: '283–606 K in training. 298 K is room temperature.',  // TODO(i18n)
     duration: 'مدة التعرّض',
-    durationHint: 'مسجَّلة في ٥٤٪ فقط من المجموعة.',
+    durationHint: 'Recorded for only 54% of the corpus.',  // TODO(i18n)
     concentration: 'تركيز المثبّط',
-    concentrationHint: 'يمتد من ٣×١٠⁻⁵ إلى ٣٢٨٠ ملي مولار؛ ويستخدم النموذج اللوغاريتم العشري.',
+    concentrationHint: 'Spans 3×10⁻⁵ to 3300 mM; the model sees log₁₀.',  // TODO(i18n)
 
     submit: 'تنبّأ بكفاءة التثبيط',
     submitPending: 'جارٍ القراءة…',
-    phNote:
-      'الأس الهيدروجيني ليس مُدخلًا. فهو يُحفظ ضمن مسار البحث لأغراض التحليل فقط، ولم يكن يومًا سمة في النموذج.',
-
     emptyTitle: 'تظهر القراءة هنا',
     emptyBody:
       'يُقرأ التنبؤ كنطاق لا كنقطة — تمامًا كما تقرأ لونًا بمقارنته ببطاقة مرجعية. وعرض النطاق هو عدم اليقين المعايَر للنموذج.',
@@ -113,6 +112,40 @@ export const ar: Translations = {
     trustFooter:
       'قيمة R² المذكورة هي ما يستحقه هذا الطلب. فالكيمياء المألوفة تُقاس بالتقسيم العشوائي؛ وكل ما عداها يُقاس بالتقسيم الهيكلي الأكثر صرامة.',
 
+    // TODO(i18n): the keys below carry English text pending translation.
+    saltStripped: 'Counter-ion removed',
+    contextLabel: 'Substrate & technique',
+    contextHint:
+      'Both are model inputs, and both matter: adding them lifted explained variance from 0.395 to 0.456 on unseen molecules. Pick from the lists — they are the exact values the model encodes.',
+    alloyLabel: 'Alloy designation',
+    alloyHint:
+      'Carbon steel lives here, not under metal. Grades with fewer than 30 corpus rows were pooled during training, and anything outside the list is pooled the same way.',
+    methodLabel: 'Measurement technique',
+    methodHint:
+      'Techniques disagree by tens of efficiency points, so the model is told which one you mean. Use "not stated" if you do not know — it is a real category with 1,389 rows.',
+    unreliableTag: '\u26a0',
+    synergistLabel: 'A synergistic additive is present',
+    synergistHint: 'Only 110 corpus rows record one, so this is weakly supported either way.',
+    ph: 'Electrolyte pH',
+    phHint:
+      'A model feature in this version. Negative values are real — the corpus reaches \u22121.0 in concentrated acid.',
+    phSourceLabel: 'This pH was',
+    salt: 'Supporting salt',
+    saltHint: 'Recorded for only 39% of the corpus, so leaving this unticked is normal.',
+    intervalNote:
+      'Every reading is a 90% band, never a bare number. On an unseen molecule that band is \u00b138.6 efficiency points, which is the honest width.',
+    preflightTitle: 'Before you read this',
+    explain: 'Explain',
+    close: 'Close',
+    nearestIs: 'Closest molecule in the training corpus:',
+    pooledInto: 'is not encoded individually, so it was pooled into',
+    replicateNote:
+      'For scale, two independent laboratory measurements of the same experiment differ by about {spread} efficiency points. A large part of the error is in the measurements, not the model.',
+    warningsTitle: 'Known limits on this reading',
+    warnUnreliableAlloy:
+      'the model explains no variance on this grade. It is in the study as a documented failure.',
+    warnUnreliableMethod: 'measurements made this way are the ones the model fits worst.',
+
     shapTitle: 'ما الذي حدّد هذا الرقم',
     shapLead: 'قيم شابلي الدقيقة على سمات النموذج نفسه، بوحدات نقاط الكفاءة.',
   },
@@ -139,13 +172,13 @@ export const ar: Translations = {
     title: 'الكفاءة تعتمد على الظروف، لذلك يتلقّاها النموذج.',
     lead: 'تتنبأ معظم نماذج البنية–الخاصية المنشورة انطلاقًا من البنية الجزيئية وحدها، في حين أن الكفاءة التي تُدرَّب عليها تعتمد على درجة الحرارة والتركيز والمدة والركيزة. حافظ هذا المشروع على تلك الظروف وسلّمها إلى النموذج. وهذا القرار هو جوهر البحث.',
     s1h: 'ثلاث مجموعات بيانات، مخطّط واحد',
-    s1p: 'Inhibitor 1368 وDataCor للألومنيوم وقاعدة Excorr — ٧٩٩١ قياسًا خامًا وُحِّدت على مقياس مشترك، مع توحيد صيغ SMILES وإزالة الأملاح.',
+    s1p: 'Inhibitor 1368, the DataCor aluminium set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',  // TODO(i18n)
     s2h: 'إزالة التكرار دون إهدار الظروف',
-    s2p: 'كان مسار سابق يحسب متوسط كل جزيء عبر جميع الظروف، فيقلّص نحو ٨٠٠٠ سجل إلى ٧١٧. أما المفتاح المركّب من الجزيء والمعدن ودرجة الحرارة والمدة والتركيز فيحفظ القياسات المتمايزة — ويعطي ٥١٧٠ سجلًا قابلًا للاستخدام.',
-    s3h: '٢٢٠ سمة',
-    s3p: '٢٠٩ واصفات RDKit غير ثابتة، إضافة إلى درجة الحرارة والمدة ولوغاريتم التركيز، ومؤشر قيمة مفقودة لكل منها، وترميز أحادي للركيزة.',
-    s4h: 'تقسيمان للتقييم، يُذكران معًا دائمًا',
-    s4p: 'تحقق متقاطع عشوائي بخمس طيّات، وتقسيم هيكلي بطريقة Bemis–Murcko تبقى فيه الجزيئات المتشاركة في النواة ضمن الطيّة نفسها. والفارق بينهما هو الرواية الصادقة.',
+    s2p: 'An earlier pipeline averaged each molecule across every condition, collapsing thousands of rows to 717. Keying on molecule, metal, temperature, duration, concentration and pH instead preserves distinct measurements — 8,359 of them, over 1,050 molecules on four base metals.',  // TODO(i18n)
+    s3h: '283 features',  // TODO(i18n)
+    s3p: '211 non-constant RDKit descriptors, then the context: temperature and its inverse, duration and log₁₀ duration, log₁₀ concentration, pH, log₁₀ salt concentration, a was-missing indicator for each, and one-hot encodings of base metal, alloy grade, measurement technique and pH provenance, plus a synergist flag.',  // TODO(i18n)
+    s4h: 'Two honest splits, always reported together',  // TODO(i18n)
+    s4p: 'Five-fold grouped by molecule, so no test molecule appears in training, and Bemis–Murcko scaffold five-fold, where molecules sharing a core stay in the same fold. A third, row-wise split was run as a control and is reported only to show how badly it flatters the model.',  // TODO(i18n)
     statMeasurements: 'قياسًا',
     statMolecules: 'جزيئًا فريدًا',
     statMetals: 'معادن',
@@ -168,9 +201,10 @@ export const ar: Translations = {
     leadA: 'يحقّق النموذج',
     leadB: 'في التقسيم العشوائي و',
     leadC: 'في التقسيم الهيكلي. وكلاهما صحيح، لكنهما يجيبان عن سؤالين مختلفين. والاكتفاء بذكر الأول هو أسهل طريقة لتضليلك، وهذه الصفحة ترفض ذلك.',
-    randomTitle: 'التقسيم العشوائي — R² ٠٫٨٠٦',
-    randomBody:
-      'طيّات مسحوبة عشوائيًا. قد يكون جزيء الاختبار موجودًا أصلًا في التدريب بظروف مختلفة، فهذا يقيس قدرة النموذج على التنبؤ بقياس جديد لجزيء سبق أن رآه. مفيد، لكنه ليس السؤال الذي يطرحه كيميائي في مرحلة الفرز.',
+    // TODO(i18n): English text pending translation.
+    groupedTitle: 'By molecule — R\u00b2 0.461',
+    groupedBody:
+      'Every measurement of a molecule is held in the same fold, so no test molecule appears in training under any conditions. This is the honest estimate for a molecule the model has not met: it explains 46% of the variance, with a typical error of 15.7 efficiency points.',
     scaffoldTitle: 'التقسيم الهيكلي — R² ٠٫٣١٠',
     scaffoldBody:
       'تبقى الجزيئات المتشاركة في نواة Bemis–Murcko ضمن الطيّة نفسها، فيكون كل جزيء اختبار غير مألوف بنيويًا. وهذا يقيس الأداء على كيمياء جديدة فعلًا. وهو الرقم الواجب ذكره لمرشّح لم يُختبر، وهو ما تستخدمه هذه الخدمة كلما كان جزيئك جديدًا عليها.',
@@ -189,16 +223,19 @@ export const ar: Translations = {
     structureOnly: 'البنية فقط',
     structurePlusConditions: 'البنية + الظروف التجريبية',
     structurePlusShort: 'البنية + الظروف',
-    randomSplit: 'التقسيم العشوائي',
     scaffoldSplit: 'التقسيم الهيكلي',
-    randomSub: 'قياسات جديدة لجزيئات معروفة',
-    scaffoldSub: 'كيمياء جديدة فعلًا',
+    scaffoldSub: 'Genuinely new chemistry',  // TODO(i18n)
     r2Note: 'R² — معامل التحديد، من ٠ إلى ١. كلما ارتفع كان أفضل.',
     splitGroup: 'تقسيم التقييم',
     scaffoldExplain:
       'تبقى الجزيئات المتشاركة في نواة Bemis–Murcko ضمن الطيّة نفسها، فيكون كل جزيء اختبار جديدًا بنيويًا. وهذا هو التقدير الصادق لمرشّح غير معروف.',
-    randomExplain:
-      'تُسحب الطيّات عشوائيًا، لذا قد يكون جزيء الاختبار موجودًا أصلًا في التدريب بظروف مختلفة. وهذا يقيس قياسات جديدة، لا كيمياء جديدة.',
+    groupedSplit: 'By molecule',
+    groupedSub: 'Molecules absent from training',
+    groupedExplain:
+      'Every measurement of a molecule is held in the same fold, so no test molecule appears in training under any conditions. This is the honest estimate for a molecule the model has not seen.',
+    colStep: 'Feature block added',
+    colFeatures: 'cols',
+    colMarginal: '\u0394 R\u00b2',
     colModel: 'النموذج',
     colRepresentation: 'التمثيل',
     colMae: 'MAE',
@@ -237,18 +274,18 @@ export const ar: Translations = {
     leadA: 'كل بند هنا هو بند كان على الممتحِن أن يكتشفه بنفسه. وعدم اليقين المعايَر البالغ',
     leadB: 'نقطة كفاءة عند تغطية تجريبية قدرها',
     leadC: 'نطاق واسع — والتصريح به بوضوح هو المقصود.',
-    l1h: 'الفجوة الهيكلية كبيرة ولم تُسدّ',
-    l1p: 'رفعت الظروف قيمة R² الهيكلية من ٠٫١٢٤ إلى ٠٫٣١٠ — تحسّن حقيقي، لكنه أدنى بكثير من ٠٫٨٠٦ في التقسيم العشوائي. فمعرفة الظروف لا تعوّض عن رؤية الكيمياء من قبل.',
-    l2h: 'المدة مفقودة في ٤٦٪ من المجموعة',
-    l2p: 'الاستكمال مع مؤشر للقيمة المفقودة مسك دفاتر أمين، لكنه لا يستعيد معلومة لم تُقَس قط.',
-    l3h: 'الأس الهيدروجيني مستبعَد عن قصد',
-    l3p: 'فهو مسجَّل في ٣٢٪ فقط من السجلات ويُحفظ للتحليل وحده. وإدراجه كان سيعني استكمال أغلب العمود.',
-    l4h: 'الحديد والفولاذ الكربوني ما زالا منفصلين',
-    l4p: 'الفولاذ الكربوني أساسه الحديد، وكلاهما يُختبر عادة في وسط حمضي، لكن المصادر لا تسجّل هذا التمييز بشكل موثوق. ودمجهما في مجموعة حديدية واحدة قرار علمي مفتوح، تُرك دون حسم عن قصد.',
-    l5h: 'الضبط كان ١٠ محاولات، لا تحققًا متقاطعًا متداخلًا',
-    l5p: 'بحث Optuna مباشر على الهدف الهيكلي. وظل منحنى الضبط مستويًا عبر كل المحاولات، فالنموذج غير مقيَّد بمعاملاته الفائقة — لكن المنهجية تصف التحقق المتقاطع المتداخل بأنه مخطَّط له لا منجَز.',
-    l6h: 'هذا ليس بديلًا عن الاختبار',
-    l6p: 'إنه نموذج بحثي توضيحي للفرز والترتيب. وتظل قياسات فقد الوزن والقياسات الكهروكيميائية هي الدليل.',
+    l1h: 'The band is wider than the answer',  // TODO(i18n)
+    l1p: 'The 90% interval is ±38.6 efficiency points on an unseen molecule. That is honest, and it is also wide enough that this model ranks candidates rather than measuring them. Treat any single number as a position in a queue.',  // TODO(i18n)
+    l2h: 'Some groups fail outright',  // TODO(i18n)
+    l2p: 'On the alloys recorded as Cold rolled steel, Stainless steel, Fe, Steel and AA1100, and on gravimetric, polarisation-resistance and current-density measurements, the model explains no variance at all. Those readings are flagged where they occur rather than quietly averaged into the headline.',  // TODO(i18n)
+    l3h: 'Much of the context was never recorded',  // TODO(i18n)
+    l3p: 'Duration is absent for a third of the corpus and supporting salt concentration for 61%. A was-missing indicator is honest bookkeeping, but it cannot recover information nobody measured.',  // TODO(i18n)
+    l4h: 'pH was recovered, not measured',  // TODO(i18n)
+    l4p: 'pH became a feature in this version, but only 49% of values were measured directly — the rest were calculated from the stated corrodent or inferred as a band. The model is told which, and on its own the provenance block slightly lowered accuracy rather than raising it.',  // TODO(i18n)
+    l5h: 'The reported tuning is not nested cross-validation',  // TODO(i18n)
+    l5p: 'Nested CV was implemented but not executed in the reported run; the served hyperparameters come from a direct 10-trial search against the scaffold objective. The tuned figures should be read as optimistic by an unmeasured margin, which is why the untuned benchmark carries the comparative conclusions.',  // TODO(i18n)
+    l6h: 'Validated against the literature, not against a bench',  // TODO(i18n)
+    l6p: 'Every figure here is measured against the published record. The comparison against this project’s own laboratory measurements has not been done. Weight-loss and electrochemical testing remain the evidence.',  // TODO(i18n)
   },
 
   batch: {
@@ -322,9 +359,12 @@ export const ar: Translations = {
     dataBody: 'وُحِّدت المجموعة من ثلاث مجموعات بيانات عامة. وهي ملك لمؤلفيها الأصليين، وتُربط هنا بدل إعادة نشرها.',
     dataGapTitle: 'الاستشهادات قيد التتبّع',
     dataGapBody: 'لم تُؤكَّد بعد المنشورات الأصلية لهذه المجموعات الثلاث، ولذلك لا يُطبع أي مرجع هنا بدلًا من طباعة مرجع قد يكون خاطئًا. إن استخدمت المجموعة، فتتبّع كل مجموعة إلى منشورها الأصلي واستشهد به مباشرة.',
-    dsInhibitor: '١٣٦٤ مدخلًا للفولاذ الكربوني في حمض الهيدروكلوريك ١ مولاري، مع واصفات كمّية.',
-    dsDatacor: '٢٠١١ قياسًا عبر سبعة عشر ركيزة ألومنيوم، مع ظروف مسجّلة لكل سطر.',
-    dsExcorr: '٤٦١٦ مدخلًا تشمل الحديد والألومنيوم والمغنيسيوم والنحاس والزنك.',
+    dsInhibitor:
+      '1,364 entries for carbon steel in 1 M HCl, with quantum-chemical descriptors.',  // TODO(i18n)
+    dsDatacor:
+      'The CORDATA multi-metal export: 5,000 rows across seventeen fields, covering aluminium, copper, iron, magnesium and zinc, with per-row conditions.',  // TODO(i18n)
+    dsExcorr:
+      '4,616 entries spanning iron, aluminium, magnesium, copper and zinc.',  // TODO(i18n)
     citationPending: 'المرجع قيد الإعداد',
 
     licenceEyebrow: 'الشروط',
@@ -346,10 +386,24 @@ export const ar: Translations = {
   },
 
   metals: {
-    aluminium: 'ألومنيوم',
-    carbon_steel: 'فولاذ كربوني',
-    copper: 'نحاس',
-    iron: 'حديد',
-    magnesium: 'مغنيسيوم',
+    Al: 'ألومنيوم',
+    Cu: 'نحاس',
+    Fe: 'حديد',
+    Mg: 'مغنيسيوم',
+  },
+
+  // TODO(i18n): English text pending translation.
+  phSources: {
+    measured: 'measured',
+    derived: 'calculated',
+    banded: 'a range',
+    missing: 'not known',
+  },
+
+  warningKinds: {
+    unsupported_metal: 'Metal',
+    extrapolation: 'Outside range',
+    unreliable_group: 'Known weakness',
+    out_of_vocabulary: 'Pooled',
   },
 }

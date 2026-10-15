@@ -9,7 +9,7 @@ export const en = {
   meta: {
     title: 'Inhibiepdt — Corrosion Inhibition Efficiency Prediction',
     description:
-      'Predict the corrosion inhibition efficiency of an organic molecule on aluminium, carbon steel, copper, iron or magnesium under stated experimental conditions, with a calibrated uncertainty band and an honest applicability-domain verdict.',
+      'Predict the corrosion inhibition efficiency of an organic molecule on iron, aluminium, magnesium or copper under stated experimental conditions, with a calibrated uncertainty band and an honest applicability-domain verdict.',
   },
 
   nav: {
@@ -25,6 +25,8 @@ export const en = {
     figures: 'Figures',
     cite: 'Cite',
     history: 'Activity',
+    login: 'Login',
+    register: 'Register',
   },
 
   pages: {
@@ -63,15 +65,30 @@ export const en = {
     lead: 'Enter a molecule and the conditions it will face. You get a calibrated band, not a false point — and a plain statement of whether this is chemistry the model actually knows.',
 
     formTitle: 'Specimen & conditions',
-    inputCount: '5 inputs',
+    inputCount: '11 inputs',
     smilesLabel: 'Molecule (SMILES)',
     gramsPerMol: 'g/mol',
     heavyAtoms: 'heavy atoms',
     inCorpus: 'In the training corpus',
-    examplesHint: 'No SMILES to hand? Load a real inhibitor above — these fill the same five inputs.',
+    examplesHint:
+      'No SMILES to hand? Load a real inhibitor above. Each one is an actual row from the training corpus, so every field is filled with a measurement that was really taken.',
+    saltStripped: 'Counter-ion removed',
 
-    metalLabel: 'Substrate metal',
+    metalLabel: 'Base metal',
     rows: 'rows',
+
+    contextLabel: 'Substrate & technique',
+    contextHint:
+      'Both are model inputs, and both matter: adding them lifted explained variance from 0.395 to 0.456 on unseen molecules. Pick from the lists — they are the exact values the model encodes.',
+    alloyLabel: 'Alloy designation',
+    alloyHint:
+      'Carbon steel lives here, not under metal. Grades with fewer than 30 corpus rows were pooled during training, and anything outside the list is pooled the same way.',
+    methodLabel: 'Measurement technique',
+    methodHint:
+      'Techniques disagree by tens of efficiency points, so the model is told which one you mean. Use “not stated” if you do not know — it is a real category with 1,389 rows.',
+    unreliableTag: '⚠',
+    synergistLabel: 'A synergistic additive is present',
+    synergistHint: 'Only 110 corpus rows record one, so this is weakly supported either way.',
 
     conditionsLabel: 'Experimental conditions',
     conditionsHint:
@@ -83,12 +100,19 @@ export const en = {
     duration: 'Exposure duration',
     durationHint: 'Recorded for only 54% of the corpus.',
     concentration: 'Inhibitor concentration',
-    concentrationHint: 'Spans 3×10⁻⁵ to 3280 mM; the model sees log₁₀.',
+    concentrationHint: 'Spans 3×10⁻⁵ to 3300 mM; the model sees log₁₀.',
+    ph: 'Electrolyte pH',
+    phHint:
+      'A model feature in this version. Negative values are real — the corpus reaches −1.0 in concentrated acid.',
+    phSourceLabel: 'This pH was',
+    salt: 'Supporting salt',
+    saltHint: 'Recorded for only 39% of the corpus, so leaving this unticked is normal.',
 
     submit: 'Predict inhibition efficiency',
     submitPending: 'Reading…',
-    phNote:
-      'pH is not an input. It is carried through the research pipeline for analysis only and was never a model feature.',
+    intervalNote:
+      'Every reading is a 90% band, never a bare number. On an unseen molecule that band is ±38.6 efficiency points, which is the honest width.',
+    preflightTitle: 'Before you read this',
 
     emptyTitle: 'The reading appears here',
     emptyBody:
@@ -103,6 +127,8 @@ export const en = {
     mass: 'Mass',
     substrate: 'Substrate',
     interval: 'interval',
+    explain: 'Explain',
+    close: 'Close',
 
     imputedOne: 'condition was not recorded',
     imputedMany: 'conditions were not recorded',
@@ -114,8 +140,18 @@ export const en = {
     scaffoldSeen: 'Scaffold seen',
     yes: 'Yes',
     no: 'No',
+    nearestIs: 'Closest molecule in the training corpus:',
+    pooledInto: 'is not encoded individually, so it was pooled into',
     trustFooter:
-      'The quoted R² is the one this request is entitled to. Familiar chemistry is measured by the random split; anything else is measured by the stricter scaffold split.',
+      'The quoted R² is the one this request is entitled to. A molecule absent from training is measured at 0.461; one whose scaffold is also new is measured by the stricter 0.398.',
+    replicateNote:
+      'For scale, two independent laboratory measurements of the same experiment differ by about {spread} efficiency points. A large part of the error is in the measurements, not the model.',
+
+    warningsTitle: 'Known limits on this reading',
+    warnUnreliableAlloy:
+      'the model explains no variance on this grade. It is in the study as a documented failure.',
+    warnUnreliableMethod:
+      'measurements made this way are the ones the model fits worst.',
 
     shapTitle: 'What drove this number',
     shapLead: 'Exact Shapley values over the model’s own features, in efficiency points.',
@@ -143,13 +179,13 @@ export const en = {
     title: 'Efficiency depends on conditions. So the model is given them.',
     lead: 'Most published structure–property models predict from molecular structure alone, while the efficiency they are trained against depends on temperature, concentration, duration and substrate. This project carried those conditions through and handed them to the model. That decision is the research.',
     s1h: 'Three datasets, one schema',
-    s1p: 'Inhibitor 1368, DataCor aluminium and the Excorr database — 7,991 raw measurements harmonised onto a common scale, with SMILES canonicalised and salts stripped.',
+    s1p: 'Inhibitor 1368, the DataCor aluminium set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',
     s2h: 'Deduplicate without discarding conditions',
-    s2p: 'An earlier pipeline averaged each molecule across every condition, collapsing ~8,000 rows to 717. Keying on molecule, metal, temperature, duration and concentration instead preserves distinct measurements — and yields 5,170 usable rows.',
-    s3h: '220 features',
-    s3p: '209 non-constant RDKit descriptors, plus temperature, duration, log₁₀ concentration, a was-missing indicator for each, and a one-hot substrate.',
-    s4h: 'Two evaluation splits, always reported together',
-    s4p: 'Random five-fold, and Bemis–Murcko scaffold five-fold where molecules sharing a core stay in the same fold. The gap between them is the honest story.',
+    s2p: 'An earlier pipeline averaged each molecule across every condition, collapsing thousands of rows to 717. Keying on molecule, metal, temperature, duration, concentration and pH instead preserves distinct measurements — 8,359 of them, over 1,050 molecules on four base metals.',
+    s3h: '283 features',
+    s3p: '211 non-constant RDKit descriptors, then the context: temperature and its inverse, duration and log₁₀ duration, log₁₀ concentration, pH, log₁₀ salt concentration, a was-missing indicator for each, and one-hot encodings of base metal, alloy grade, measurement technique and pH provenance, plus a synergist flag.',
+    s4h: 'Two honest splits, always reported together',
+    s4p: 'Five-fold grouped by molecule, so no test molecule appears in training, and Bemis–Murcko scaffold five-fold, where molecules sharing a core stay in the same fold. A third, row-wise split was run as a control and is reported only to show how badly it flatters the model.',
     statMeasurements: 'measurements',
     statMolecules: 'unique molecules',
     statMetals: 'metals',
@@ -170,20 +206,20 @@ export const en = {
     eyebrow: 'Results',
     title: 'Two numbers, never one.',
     leadA: 'The model scores',
-    leadB: 'on a random split and',
-    leadC: 'on a scaffold split. Both are true, and they answer different questions. Quoting only the first would be the easiest way to mislead you, so this page refuses to.',
-    randomTitle: 'Random split — R² 0.806',
-    randomBody:
-      'Folds drawn at random. A test molecule may already appear in training under different conditions, so this measures how well the model predicts a new measurement of a molecule it has met. Useful, and not the question a screening chemist is asking.',
-    scaffoldTitle: 'Scaffold split — R² 0.310',
+    leadB: 'on molecules absent from training and',
+    leadC: 'when the molecular scaffold is new as well. Both are true, and they answer different questions. There is a third, higher figure in the research notebook — it comes from a split that let the model see its own test molecules, and this page will not quote it.',
+    groupedTitle: 'By molecule — R² 0.461',
+    groupedBody:
+      'Every measurement of a molecule is held in the same fold, so no test molecule appears in training under any conditions. This is the honest estimate for a molecule the model has not met: it explains 46% of the variance, with a typical error of 15.7 efficiency points.',
+    scaffoldTitle: 'By scaffold — R² 0.398',
     scaffoldBody:
-      'Molecules sharing a Bemis–Murcko core are held in the same fold, so every test molecule is structurally unfamiliar. This measures performance on genuinely new chemistry. It is the number to quote for an untested candidate, and the one this service uses whenever your molecule is new to it.',
-    ablationTitle: 'The central result',
+      'Molecules sharing a Bemis–Murcko core are held in the same fold, so every test molecule is structurally unfamiliar. This is the number to quote for an untested candidate, and the one this service uses whenever your molecule’s scaffold is new to it.',
+    ablationTitle: 'What each block bought',
     ablationLead:
-      'The same random forest, with and without experimental conditions. The lift is systematic — it held for every classical model tested, which is what makes it signal rather than luck.',
+      'A cumulative ablation: descriptors alone, then the experimental conditions, pH provenance, substrate and technique added in turn. The substrate and technique blocks carry most of the lift; pH provenance, on its own, slightly cost accuracy.',
     leaderboardTitle: 'Every model tested',
     leaderboardLead:
-      'Four model families across both splits. The condition-aware random forest wins everywhere — including against the graph networks and the fine-tuned transformer, which read structure only.',
+      'Fourteen configurations across five families, on both honest schemes. They cluster tightly — the graph networks and the fine-tuned transformer do not beat a random forest given the same context, which says the ceiling is in the data rather than the architecture.',
     unavailable: 'Live metrics unavailable — the prediction service at',
     unreachable: 'is not reachable.',
     loading: 'Loading metrics…',
@@ -193,16 +229,19 @@ export const en = {
     structureOnly: 'Structure only',
     structurePlusConditions: 'Structure + experimental conditions',
     structurePlusShort: 'Structure + conditions',
-    randomSplit: 'Random split',
     scaffoldSplit: 'Scaffold split',
-    randomSub: 'New measurements of known molecules',
     scaffoldSub: 'Genuinely new chemistry',
     r2Note: 'R² — coefficient of determination, 0 to 1. Higher is better.',
     splitGroup: 'Evaluation split',
     scaffoldExplain:
       'Molecules sharing a Bemis–Murcko core are held in the same fold, so every test molecule is structurally new. This is the honest estimate for an unseen candidate.',
-    randomExplain:
-      'Folds are drawn at random, so a test molecule may already appear in training under different conditions. This measures new measurements, not new chemistry.',
+    groupedSplit: 'By molecule',
+    groupedSub: 'Molecules absent from training',
+    groupedExplain:
+      'Every measurement of a molecule is held in the same fold, so no test molecule appears in training under any conditions. This is the honest estimate for a molecule the model has not seen.',
+    colStep: 'Feature block added',
+    colFeatures: 'cols',
+    colMarginal: 'Δ R²',
     colModel: 'Model',
     colRepresentation: 'Representation',
     colMae: 'MAE',
@@ -241,18 +280,18 @@ export const en = {
     leadA: 'Every item here is one an examiner would otherwise have to find. Calibrated uncertainty of',
     leadB: 'efficiency points at',
     leadC: 'empirical coverage is wide — and stating it plainly is the point.',
-    l1h: 'The scaffold gap is large, and it did not close',
-    l1p: 'Conditions lifted scaffold R² from 0.124 to 0.310 — real, but far below the 0.806 random-split figure. Knowing the conditions cannot substitute for having seen the chemistry.',
-    l2h: 'Duration is missing for 46% of the corpus',
-    l2p: 'Imputation with a was-missing indicator is honest bookkeeping, but it cannot recover information that was never measured.',
-    l3h: 'pH is excluded by design',
-    l3p: 'It is recorded for only 32% of rows and is carried for analysis only. Adding it would have meant imputing a majority of the column.',
-    l4h: 'Iron and carbon steel are still separate',
-    l4p: 'Carbon steel is iron-based and both are usually tested in acid, but the sources do not record the distinction reliably. Whether to merge them into one ferrous group is an open scientific decision, deliberately unresolved.',
-    l5h: 'Tuning was 10 trials, not nested cross-validation',
-    l5p: 'A direct Optuna search against the scaffold objective. The tuning curve was flat across all trials, so the model is not hyperparameter-limited — but the methodology labels nested CV as planned, not done.',
-    l6h: 'This is not a substitute for testing',
-    l6p: 'It is a research demonstrator for screening and ranking. Weight-loss and electrochemical measurement remain the evidence.',
+    l1h: 'The band is wider than the answer',
+    l1p: 'The 90% interval is ±38.6 efficiency points on an unseen molecule. That is honest, and it is also wide enough that this model ranks candidates rather than measuring them. Treat any single number as a position in a queue.',
+    l2h: 'Some groups fail outright',
+    l2p: 'On the alloys recorded as Cold rolled steel, Stainless steel, Fe, Steel and AA1100, and on gravimetric, polarisation-resistance and current-density measurements, the model explains no variance at all. Those readings are flagged where they occur rather than quietly averaged into the headline.',
+    l3h: 'Much of the context was never recorded',
+    l3p: 'Duration is absent for a third of the corpus and supporting salt concentration for 61%. A was-missing indicator is honest bookkeeping, but it cannot recover information nobody measured.',
+    l4h: 'pH was recovered, not measured',
+    l4p: 'pH became a feature in this version, but only 49% of values were measured directly — the rest were calculated from the stated corrodent or inferred as a band. The model is told which, and on its own the provenance block slightly lowered accuracy rather than raising it.',
+    l5h: 'The reported tuning is not nested cross-validation',
+    l5p: 'Nested CV was implemented but not executed in the reported run; the served hyperparameters come from a direct 10-trial search against the scaffold objective. The tuned figures should be read as optimistic by an unmeasured margin, which is why the untuned benchmark carries the comparative conclusions.',
+    l6h: 'Validated against the literature, not against a bench',
+    l6p: 'Every figure here is measured against the published record. The comparison against this project’s own laboratory measurements has not been done. Weight-loss and electrochemical testing remain the evidence.',
   },
 
   batch: {
@@ -326,9 +365,12 @@ export const en = {
     dataBody: 'The corpus was harmonised from three public datasets. They belong to their original authors and are linked to rather than redistributed here.',
     dataGapTitle: 'Citations still being traced',
     dataGapBody: 'The original publications for these three datasets have not yet been confirmed, so no reference is printed here rather than printing one that might be wrong. If you use the corpus, trace each dataset to its source publication and cite that directly.',
-    dsInhibitor: '1,364 entries for carbon steel in 1 M HCl, with quantum-chemical descriptors.',
-    dsDatacor: '2,011 measurements across seventeen aluminium substrates, with per-row conditions.',
-    dsExcorr: '4,616 entries spanning iron, aluminium, magnesium, copper and zinc.',
+    dsInhibitor:
+      '1,364 entries for carbon steel in 1 M HCl, with quantum-chemical descriptors.',
+    dsDatacor:
+      'The CORDATA multi-metal export: 5,000 rows across seventeen fields, covering aluminium, copper, iron, magnesium and zinc, with per-row conditions.',
+    dsExcorr:
+      '4,616 entries spanning iron, aluminium, magnesium, copper and zinc.',
     citationPending: 'Reference pending',
 
     licenceEyebrow: 'Terms',
@@ -350,11 +392,24 @@ export const en = {
   },
 
   metals: {
-    aluminium: 'Aluminium',
-    carbon_steel: 'Carbon steel',
-    copper: 'Copper',
-    iron: 'Iron',
-    magnesium: 'Magnesium',
+    Al: 'Aluminium',
+    Cu: 'Copper',
+    Fe: 'Iron',
+    Mg: 'Magnesium',
+  },
+
+  phSources: {
+    measured: 'measured',
+    derived: 'calculated',
+    banded: 'a range',
+    missing: 'not known',
+  },
+
+  warningKinds: {
+    unsupported_metal: 'Metal',
+    extrapolation: 'Outside range',
+    unreliable_group: 'Known weakness',
+    out_of_vocabulary: 'Pooled',
   },
 } as const
 
