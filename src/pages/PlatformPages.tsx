@@ -93,6 +93,37 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
 }
 
 /**
+ * The administrative surface, for administrators.
+ *
+ * `ProtectedRoute` only establishes that *someone* is signed in, so without this an
+ * ordinary account reaches /admin, every request behind it returns 403, and the page
+ * renders as an empty shell that looks broken rather than forbidden. The API remains
+ * the thing that actually enforces this; the guard only stops the interface offering
+ * something it cannot deliver.
+ */
+export function AdminRoute({ children }: { children: ReactNode }) {
+  const { status, user } = useSession()
+
+  if (status === 'loading') {
+    return <Section eyebrow="ADMINISTRATION" title="Checking access"><p className="text-ink-2">One moment…</p></Section>
+  }
+  if (status === 'guest') return <Navigate to="/login" replace />
+  if (user?.role !== 'platform_admin') {
+    return (
+      <Section eyebrow="ADMINISTRATION" title="Not available for this account">
+        <p className="max-w-prose text-ink-2">
+          The administrative surface is limited to platform administrators. If you believe this
+          account should have access, it has to be listed before the account is registered —
+          the role is assigned at registration.
+        </p>
+        <Link className={`${buttonClass} mt-6 inline-block`} to="/dashboard">Back to your dashboard</Link>
+      </Section>
+    )
+  }
+  return <>{children}</>
+}
+
+/**
  * What stands in for the predictor when nobody is signed in.
  *
  * Not a disabled form: showing the eleven inputs and refusing on submit wastes the

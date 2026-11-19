@@ -232,6 +232,12 @@ export const modelInfoSchema = z.object({
     ad_reference_divergence: z.record(z.unknown()).nullable().optional(),
     artifact_hashes: z.record(z.string()),
   }),
+  // Live request telemetry: what the service has actually been asked since it started,
+  // and how much of it fell outside the domain the model was validated on. Left as an
+  // open record rather than pinned field by field — it is operational instrumentation
+  // that will gain counters, and a strict schema here would reject the whole model
+  // response the first time one was added.
+  drift: z.record(z.unknown()).optional(),
 })
 
 /** The categorical vocabularies the form binds its selects to. */
@@ -507,7 +513,63 @@ export const api = {
     request(`/api/v1/threads/${id}/messages`, z.record(z.unknown()), { method: 'POST', body: JSON.stringify({ message }) }),
 
   adminOverview: () => request('/api/v1/admin/overview', overviewSchema),
-  adminResource: (resource: string) => request(`/api/v1/admin/${resource}`, z.object({ items: z.array(z.record(z.unknown())) })),
+
+  // Administrative records are heterogeneous by design — a user, a payment and an audit
+  // entry share no shape — so the rows stay unvalidated records and the envelope around
+  // them is what gets checked. `total` is the field that matters: without it a truncated
+  // page is indistinguishable from the whole collection.
+  adminResource: (resource: string, limit = 100, skip = 0) =>
+    request(
+      `/api/v1/admin/${resource}?limit=${limit}&skip=${skip}`,
+      z.object({
+        items: z.array(z.record(z.unknown())),
+        total: z.number(),
+        limit: z.number(),
+        skip: z.number(),
+      }),
+    ),
+
+  adminResourceItem: (resource: string, id: string) =>
+    request(
+      `/api/v1/admin/${resource}/${encodeURIComponent(id)}`,
+      z.object({ item: z.record(z.unknown()) }),
+    ),
+
+  // PATCH /admin/requests/{kind}/{id} already existed on the server with no client to
+  // call it, so the status recorded against a research request could only ever be the
+  // one it was created with. Changing it also emails the requester.
+  updateAdminRequest: (
+    kind: string,
+    requestId: string,
+    input: { status: string; priority?: string; internal_note?: string },
+  ) =>
+    request(
+      `/api/v1/admin/requests/${encodeURIComponent(kind)}/${encodeURIComponent(requestId)}`,
+      z.record(z.unknown()),
+      { method: 'PATCH', body: JSON.stringify(input) },
+    ),
+
+  adminCustomer: (userId: string) =>
+    request(
+      `/api/v1/admin/customers/${encodeURIComponent(userId)}`,
+      z.object({
+        account: z.record(z.unknown()),
+        predictions: z.array(z.record(z.unknown())),
+        payments: z.array(z.record(z.unknown())),
+        invoices: z.array(z.record(z.unknown())),
+        requests: z.object({
+          data: z.array(z.record(z.unknown())),
+          papers: z.array(z.record(z.unknown())),
+        }),
+        threads: z.array(z.record(z.unknown())),
+        totals: z.object({
+          predictions: z.number(),
+          payments: z.number(),
+          successful_payments: z.number(),
+          spend_major: z.number(),
+        }),
+      }),
+    ),
 
   visit: (path: string) =>
     request('/api/v1/analytics/visit', z.any(), { method: 'POST', body: JSON.stringify({ path, referrer: document.referrer }) }).catch(() => undefined),

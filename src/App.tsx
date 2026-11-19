@@ -14,7 +14,9 @@ import FiguresPage from '@/pages/FiguresPage'
 import CitePage from '@/pages/CitePage'
 import HistoryPage from '@/pages/HistoryPage'
 import NotFoundPage from '@/pages/NotFoundPage'
-import { AdminPage, DashboardPage, ForgotPasswordPage, LoginPage, MessageThreadPage, ProtectedRoute, RegisterPage, ResetPasswordPage, VerifyEmailPage } from '@/pages/PlatformPages'
+import { AdminRoute, DashboardPage, ForgotPasswordPage, LoginPage, MessageThreadPage, ProtectedRoute, RegisterPage, ResetPasswordPage, VerifyEmailPage } from '@/pages/PlatformPages'
+import AdminPage from '@/pages/admin/AdminPage'
+import { AdminCustomerPage, AdminInvoicePage, AdminPredictionPage, AdminRequestPage } from '@/pages/admin/AdminDetail'
 
 export default function App() {
   const [model, setModel] = useState<ModelInfo | null>(null)
@@ -61,7 +63,15 @@ export default function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/dashboard/messages/:threadId" element={<ProtectedRoute><MessageThreadPage /></ProtectedRoute>} />
           <Route path="/dashboard/*" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
+          {/* The admin surface. Tabs resolve inside AdminPage from the path, matching how
+              /dashboard works; the detail routes are declared first so that `customers`
+              and `predictions` are not swallowed by the tab route. */}
+          <Route path="/admin/customers/:id" element={<AdminRoute><AdminCustomerPage /></AdminRoute>} />
+          <Route path="/admin/predictions/:id" element={<AdminRoute><AdminPredictionPage /></AdminRoute>} />
+          <Route path="/admin/invoices/:id" element={<AdminRoute><AdminInvoicePage /></AdminRoute>} />
+          <Route path="/admin/requests/:kind/:id" element={<AdminRoute><AdminRequestPage /></AdminRoute>} />
+          <Route path="/admin/threads/:threadId" element={<AdminRoute><MessageThreadPage /></AdminRoute>} />
+          <Route path="/admin/*" element={<AdminRoute><AdminPage /></AdminRoute>} />
           <Route path="*" element={<NotFoundPage t={t} />} />
         </Routes>
       </main>
