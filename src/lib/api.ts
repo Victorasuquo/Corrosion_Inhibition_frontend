@@ -7,8 +7,25 @@
 
 import { z } from 'zod'
 
+/**
+ * Where the API lives.
+ *
+ * `VITE_API_BASE_URL` wins when it is set. The fallback differs by build because a
+ * production bundle that quietly defaults to localhost is the worst of both worlds: it
+ * compiles, deploys and renders, and every request fails in the visitor's browser
+ * against a machine that is not theirs. That is exactly what the live site did while
+ * the variable was unset in Vercel — the page looked healthy and nothing worked.
+ *
+ * So a production build falls back to the real API origin and a development build to
+ * the local one. Setting the variable explicitly in Vercel is still the right thing to
+ * do; this only decides what happens when someone forgets.
+ */
+const DEFAULT_API_BASE_URL = import.meta.env.PROD
+  ? 'https://api.inhibiepdt.com'
+  : 'http://localhost:8000'
+
 export const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
+  import.meta.env.VITE_API_BASE_URL ?? DEFAULT_API_BASE_URL
 ).replace(/\/+$/, '')
 
 /* -------------------------------------------------------------------------- */
