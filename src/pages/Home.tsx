@@ -5,6 +5,8 @@ import { AblationChart, Leaderboard } from '@/components/Charts'
 import { BatchPanel } from '@/components/BatchPanel'
 import { Predictor } from '@/components/Predictor'
 import { Placeholder, Section } from '@/components/Shell'
+import { SignInToPredict } from '@/pages/PlatformPages'
+import { useSession } from '@/lib/session'
 
 interface PageProps {
   t: Translations
@@ -117,9 +119,21 @@ function Problem({ t }: { t: Translations }) {
 }
 
 function PredictSection({ t }: { t: Translations }) {
+  // The overview is the public face of the study and stays readable by anyone, but the
+  // instrument on it is the same instrument as /predict and carries the same condition:
+  // a model output belongs to an account. Rendering the form to a visitor who cannot
+  // submit it would be a worse welcome than saying so first.
+  const { status } = useSession()
   return (
     <Section id="predict" eyebrow={t.predictor.eyebrow} title={t.predictor.title} lead={t.predictor.lead}>
-      <Predictor />
+      {status === 'authenticated' ? (
+        <Predictor />
+      ) : (
+        <SignInToPredict
+          title="Sign in to read an efficiency"
+          lead="The predictor is open to anyone with a verified research account, and creating one is free."
+        />
+      )}
     </Section>
   )
 }
@@ -321,9 +335,17 @@ function Limits({ t, model }: { t: Translations; model: ModelInfo | null }) {
 }
 
 function BatchSection({ t }: { t: Translations }) {
+  const { status } = useSession()
   return (
     <Section eyebrow={t.batch.eyebrow} title={t.batch.title} lead={t.batch.lead}>
-      <BatchPanel />
+      {status === 'authenticated' ? (
+        <BatchPanel />
+      ) : (
+        <SignInToPredict
+          title="Sign in to screen a file"
+          lead="Batch screening scores a whole CSV against the same model, and needs the same verified account."
+        />
+      )}
     </Section>
   )
 }

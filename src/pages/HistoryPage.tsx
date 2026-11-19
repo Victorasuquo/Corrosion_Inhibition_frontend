@@ -13,16 +13,14 @@ import { Section } from '@/components/Shell'
  */
 export default function HistoryPage({ t }: { t: Translations }) {
   const [rows, setRows] = useState<RecentPrediction[] | null>(null)
-  const [backend, setBackend] = useState<string>('')
   const [failed, setFailed] = useState(false)
 
   useEffect(() => {
+    // The response also carries which store answered. That is an operational detail
+    // rather than something a reader of the research record needs, so it is not kept.
     api
       .recentPredictions(50)
-      .then((res) => {
-        setRows(res.items)
-        setBackend(res.backend)
-      })
+      .then((res) => setRows(res.items))
       .catch(() => setFailed(true))
   }, [])
 
@@ -135,9 +133,6 @@ export default function HistoryPage({ t }: { t: Translations }) {
             </table>
           </div>
 
-          <p className="mt-4 font-mono text-xs text-ink-3" dir="ltr">
-            {rows.length} {t.history.rows} · {backend}
-          </p>
         </>
       )}
     </Section>

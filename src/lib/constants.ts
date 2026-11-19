@@ -9,7 +9,7 @@ export const PRODUCT_NAME = 'Inhibiepdt'
 
 export const ATTRIBUTION = {
   author: 'Anne Sylvanus Obot',
-  supervisor: 'Dr. Ekerete Jackson BoEKOM',
+  supervisor: 'Dr Ekerete Jackson Boekom',
   coSupervisor: 'Prof. Philip Asuquo',
   department: 'Department of Chemistry',
   institution: 'University of Uyo',
@@ -177,7 +177,7 @@ export const EXAMPLES = [
  */
 export const PERFORMANCE = {
   groupedMolecule: { r2: 0.461, mae: 15.65, rmse: 21.45, spearman: 0.687 },
-  scaffold: { r2: 0.398, mae: 17.34, rmse: 22.24, spearman: 0.61 },
+  scaffold: { r2: 0.398, mae: 17.32, rmse: 22.23, spearman: 0.61 },
   intervalHalfWidth: 38.61,
   intervalCoverage: 0.926,
   /** Two independent laboratory measurements of the same experiment differ by about this. */
@@ -207,3 +207,32 @@ export const CITATIONS = {
     url: 'http://impact.nace.org/documents/Nace-International-Report.pdf',
   },
 } as const
+
+/**
+ * The three source databases, with the references the thesis cites.
+ *
+ * These are not "pending". Each is confirmed in Chapter 3 and in the research
+ * repository's DATA.md, and the corpus is not redistributable without them: the
+ * measurements belong to these compilations and to the primary publications they
+ * aggregate. Anyone using the corpus cites these as well as the thesis.
+ */
+export const SOURCE_DATASETS = [
+  {
+    name: 'Inhibitor 1368',
+    reference:
+      'Gong, H., Fu, Z., Ma, L., & Zhang, D. (2024). Inhibitor_Mol_VAE: A variational autoencoder approach for generating corrosion inhibitor molecules. npj Materials Degradation, 8(1), 102.',
+    url: '',
+  },
+  {
+    name: 'CORDATA',
+    reference:
+      'Galvão, T. L. P., Ferreira, I., Kuznetsova, A., Rocha, A. B., Tedim, J., & Ferreira, M. G. S. (2022). CORDATA: An open data management web application to select corrosion inhibitors. npj Materials Degradation, 6, 48.',
+    url: 'https://doi.org/10.1038/s41529-022-00259-9',
+  },
+  {
+    name: 'ExCorr',
+    reference:
+      'Würger, T. (n.d.). ExCorr: An interactive corrosion inhibitor database [Web application]. Helmholtz-Zentrum Hereon.',
+    url: 'https://excorr.web.app',
+  },
+] as const

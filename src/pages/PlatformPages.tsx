@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from
 import { Link, NavLink, Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { ApiError, api, type Payment, type User } from '@/lib/api'
+import { clearSession, rememberReturnTo, takeReturnTo, useSession } from '@/lib/session'
 import { BatchPanel } from '@/components/BatchPanel'
 import { Predictor } from '@/components/Predictor'
 import { Section } from '@/components/Shell'
@@ -31,9 +32,15 @@ export function LoginPage() {
   const [pending, setPending] = useState(false)
   async function submit(event: FormEvent) {
     event.preventDefault(); setPending(true); setError(null)
-    try { await api.login({ email, password }); navigate('/dashboard') } catch (err) { setError(err instanceof ApiError ? err.message : 'Unable to sign in.') } finally { setPending(false) }
+    try {
+      await api.login({ email, password })
+      // The cached answer from before signing in is now wrong; leaving it would keep
+      // the interface in its signed-out state until a full reload.
+      clearSession()
+      navigate(takeReturnTo() ?? '/dashboard', { replace: true })
+    } catch (err) { setError(err instanceof ApiError ? err.message : 'Unable to sign in.') } finally { setPending(false) }
   }
-  return <AuthFrame eyebrow="ACCOUNT" title="Sign in to the research platform" lead="Access paid predictions, persistent history, invoices, requests, and platform messaging.">
+  return <AuthFrame eyebrow="ACCOUNT" title="Sign in to the research platform" lead="Predictions require a verified account. History, requests and platform messaging live here too.">
     <form onSubmit={submit} className="space-y-5"><Field label="Email" type="email" value={email} onChange={setEmail} required /><Field label="Password" type="password" value={password} onChange={setPassword} required /><ErrorLine error={error} /><button className={buttonClass} disabled={pending}>{pending ? 'Signing in…' : 'Sign in'}</button></form>
     <div className="mt-6 flex flex-wrap gap-4 text-sm text-ink-2"><Link className="underline underline-offset-4" to="/register">Create an account</Link><Link className="underline underline-offset-4" to="/forgot-password">Forgot password?</Link></div>
   </AuthFrame>
@@ -71,10 +78,46 @@ export function ResetPasswordPage() {
 }
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<'loading' | 'authenticated' | 'guest'>('loading')
-  useEffect(() => { api.me().then(() => setState('authenticated')).catch(() => setState('guest')) }, [])
-  if (state === 'loading') return <Section eyebrow="ACCOUNT" title="Loading account"><p className="text-ink-2">Checking your secure session…</p></Section>
-  return state === 'guest' ? <Navigate to="/login" replace /> : <>{children}</>
+  const location = useLocation()
+  const { status } = useSession()
+  const destination = `${location.pathname}${location.search}`
+
+  useEffect(() => {
+    // Recorded on the way out, so signing in returns the person to the page they asked
+    // for rather than dropping them on the dashboard to find it again.
+    if (status === 'guest') rememberReturnTo(destination)
+  }, [status, destination])
+
+  if (status === 'loading') return <Section eyebrow="ACCOUNT" title="Loading account"><p className="text-ink-2">Checking your secure session…</p></Section>
+  return status === 'guest' ? <Navigate to="/login" replace /> : <>{children}</>
+}
+
+/**
+ * What stands in for the predictor when nobody is signed in.
+ *
+ * Not a disabled form: showing the eleven inputs and refusing on submit wastes the
+ * visitor's work and teaches them the service is broken. This states the requirement
+ * before anything is typed, and says plainly why it exists.
+ */
+export function SignInToPredict({ title, lead }: { title: string; lead: string }) {
+  return <div className="panel registered p-6 sm:p-8">
+    <p className="patch-label text-ink-3">ACCOUNT REQUIRED</p>
+    <h3 className="mt-3 font-display text-2xl font-700">{title}</h3>
+    <p className="mt-3 max-w-prose text-ink-2">{lead}</p>
+    <p className="mt-3 max-w-prose text-sm text-ink-3">
+      A reading from this model is a claim about chemistry, carried under the study's name and
+      bounded by a calibrated interval. Each one is recorded against the account that asked for
+      it, so a number quoted later can be traced back to the exact artefact that produced it.
+    </p>
+    <div className="mt-6 flex flex-wrap gap-3">
+      <Link className={`${buttonClass} inline-block`} to="/login">Sign in</Link>
+      <Link className={`${secondaryClass} inline-block`} to="/register">Create an account</Link>
+    </div>
+    <p className="mt-5 text-sm text-ink-3">
+      The method, the results, the limits and the full research record stay open to everyone —
+      no account needed to read any of them.
+    </p>
+  </div>
 }
 
 function DashboardNav({ user }: { user: User }) {

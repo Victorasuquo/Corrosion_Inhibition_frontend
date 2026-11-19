@@ -5,9 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f5f2" />
     <title>Inhibiepdt — Corrosion Inhibition Efficiency Prediction</title>
+    <!-- Four base metals, matching METALS in src/lib/constants.ts. Carbon steel is an
+         alloy of iron here, not a fifth metal. Keep in step with meta.description in
+         src/i18n/en.ts. -->
     <meta
       name="description"
-      content="Predict the corrosion inhibition efficiency of an organic molecule on aluminium, carbon steel, copper, iron or magnesium under stated experimental conditions, with a calibrated uncertainty band and an honest applicability-domain verdict."
+      content="Predict the corrosion inhibition efficiency of an organic molecule on iron, aluminium, magnesium or copper under stated experimental conditions, with a calibrated uncertainty band and an honest applicability-domain verdict."
+    />
+
+    <!-- Site-level cards: there is no per-route head management, so these describe the
+         study as a whole. Do NOT add a static canonical link here — in a single-page
+         application it would declare every route to be "/". -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Inhibiepdt" />
+    <meta property="og:url" content="https://www.inhibiepdt.com/" />
+    <meta property="og:title" content="Inhibiepdt — Corrosion Inhibition Efficiency Prediction" />
+    <meta
+      property="og:description"
+      content="A condition-aware QSPR model for organic corrosion inhibition efficiency, served with a calibrated 90% interval and an explicit applicability-domain verdict."
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Inhibiepdt — Corrosion Inhibition Efficiency Prediction"
+    />
+    <meta
+      name="twitter:description"
+      content="A condition-aware QSPR model for organic corrosion inhibition efficiency, served with a calibrated 90% interval and an explicit applicability-domain verdict."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

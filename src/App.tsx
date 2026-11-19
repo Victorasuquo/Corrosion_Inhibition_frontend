@@ -43,8 +43,11 @@ export default function App() {
       <main id="main">
         <Routes>
           <Route path="/" element={<Home {...shared} />} />
-          <Route path="/predict" element={<PredictPage {...shared} />} />
-          <Route path="/batch" element={<BatchPage t={t} />} />
+          {/* Producing a model output requires a verified account; the backend enforces
+              the same rule, so these guards are the courtesy of asking before the work
+              is typed rather than the thing standing between a visitor and a prediction. */}
+          <Route path="/predict" element={<ProtectedRoute><PredictPage {...shared} /></ProtectedRoute>} />
+          <Route path="/batch" element={<ProtectedRoute><BatchPage t={t} /></ProtectedRoute>} />
           <Route path="/method" element={<MethodPage t={t} model={model} />} />
           <Route path="/results" element={<ResultsPage {...shared} />} />
           <Route path="/limits" element={<LimitsPage t={t} model={model} />} />

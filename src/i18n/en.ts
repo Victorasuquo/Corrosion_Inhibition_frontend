@@ -179,7 +179,7 @@ export const en = {
     title: 'Efficiency depends on conditions. So the model is given them.',
     lead: 'Most published structure–property models predict from molecular structure alone, while the efficiency they are trained against depends on temperature, concentration, duration and substrate. This project carried those conditions through and handed them to the model. That decision is the research.',
     s1h: 'Three datasets, one schema',
-    s1p: 'Inhibitor 1368, the DataCor aluminium set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',
+    s1p: 'Inhibitor 1368, the ExCorr multi-metal set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',
     s2h: 'Deduplicate without discarding conditions',
     s2p: 'An earlier pipeline averaged each molecule across every condition, collapsing thousands of rows to 717. Keying on molecule, metal, temperature, duration, concentration and pH instead preserves distinct measurements — 8,359 of them, over 1,050 molecules on four base metals.',
     s3h: '283 features',
@@ -367,7 +367,7 @@ export const en = {
     dataGapBody: 'The original publications for these three datasets have not yet been confirmed, so no reference is printed here rather than printing one that might be wrong. If you use the corpus, trace each dataset to its source publication and cite that directly.',
     dsInhibitor:
       '1,364 entries for carbon steel in 1 M HCl, with quantum-chemical descriptors.',
-    dsDatacor:
+    dsCordata:
       'The CORDATA multi-metal export: 5,000 rows across seventeen fields, covering aluminium, copper, iron, magnesium and zinc, with per-row conditions.',
     dsExcorr:
       '4,616 entries spanning iron, aluminium, magnesium, copper and zinc.',

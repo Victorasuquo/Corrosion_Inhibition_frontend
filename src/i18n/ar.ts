@@ -172,7 +172,7 @@ export const ar: Translations = {
     title: 'الكفاءة تعتمد على الظروف، لذلك يتلقّاها النموذج.',
     lead: 'تتنبأ معظم نماذج البنية–الخاصية المنشورة انطلاقًا من البنية الجزيئية وحدها، في حين أن الكفاءة التي تُدرَّب عليها تعتمد على درجة الحرارة والتركيز والمدة والركيزة. حافظ هذا المشروع على تلك الظروف وسلّمها إلى النموذج. وهذا القرار هو جوهر البحث.',
     s1h: 'ثلاث مجموعات بيانات، مخطّط واحد',
-    s1p: 'Inhibitor 1368, the DataCor aluminium set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',  // TODO(i18n)
+    s1p: 'Inhibitor 1368, the ExCorr multi-metal set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',  // TODO(i18n)
     s2h: 'إزالة التكرار دون إهدار الظروف',
     s2p: 'An earlier pipeline averaged each molecule across every condition, collapsing thousands of rows to 717. Keying on molecule, metal, temperature, duration, concentration and pH instead preserves distinct measurements — 8,359 of them, over 1,050 molecules on four base metals.',  // TODO(i18n)
     s3h: '283 features',  // TODO(i18n)
@@ -361,7 +361,7 @@ export const ar: Translations = {
     dataGapBody: 'لم تُؤكَّد بعد المنشورات الأصلية لهذه المجموعات الثلاث، ولذلك لا يُطبع أي مرجع هنا بدلًا من طباعة مرجع قد يكون خاطئًا. إن استخدمت المجموعة، فتتبّع كل مجموعة إلى منشورها الأصلي واستشهد به مباشرة.',
     dsInhibitor:
       '1,364 entries for carbon steel in 1 M HCl, with quantum-chemical descriptors.',  // TODO(i18n)
-    dsDatacor:
+    dsCordata:
       'The CORDATA multi-metal export: 5,000 rows across seventeen fields, covering aluminium, copper, iron, magnesium and zinc, with per-row conditions.',  // TODO(i18n)
     dsExcorr:
       '4,616 entries spanning iron, aluminium, magnesium, copper and zinc.',  // TODO(i18n)

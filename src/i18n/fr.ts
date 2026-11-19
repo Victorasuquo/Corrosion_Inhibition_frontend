@@ -173,7 +173,7 @@ export const fr: Translations = {
     title: 'L’efficacité dépend des conditions. Le modèle les reçoit donc.',
     lead: 'La plupart des modèles structure–propriété publiés prédisent à partir de la seule structure moléculaire, alors que l’efficacité sur laquelle ils sont entraînés dépend de la température, de la concentration, de la durée et du substrat. Ce projet a conservé ces conditions et les a fournies au modèle. Cette décision constitue la recherche.',
     s1h: 'Trois jeux de données, un seul schéma',
-    s1p: 'Inhibitor 1368, the DataCor aluminium set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',  // TODO(i18n)
+    s1p: 'Inhibitor 1368, the ExCorr multi-metal set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',  // TODO(i18n)
     s2h: 'Dédoublonner sans écarter les conditions',
     s2p: 'An earlier pipeline averaged each molecule across every condition, collapsing thousands of rows to 717. Keying on molecule, metal, temperature, duration, concentration and pH instead preserves distinct measurements — 8,359 of them, over 1,050 molecules on four base metals.',  // TODO(i18n)
     s3h: '283 features',  // TODO(i18n)
@@ -362,7 +362,7 @@ export const fr: Translations = {
     dataGapBody: 'Les publications d’origine de ces trois jeux de données n’ont pas encore été confirmées ; aucune référence n’est donc imprimée ici, plutôt que d’en imprimer une qui serait peut-être fausse. Si vous utilisez le corpus, remontez à la publication source de chaque jeu et citez-la directement.',
     dsInhibitor:
       '1,364 entries for carbon steel in 1 M HCl, with quantum-chemical descriptors.',  // TODO(i18n)
-    dsDatacor:
+    dsCordata:
       'The CORDATA multi-metal export: 5,000 rows across seventeen fields, covering aluminium, copper, iron, magnesium and zinc, with per-row conditions.',  // TODO(i18n)
     dsExcorr:
       '4,616 entries spanning iron, aluminium, magnesium, copper and zinc.',  // TODO(i18n)

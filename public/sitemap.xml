@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap for inhibiepdt.com.
+
+  Canonical host is www: the apex 308-redirects to it, so listing the apex here would
+  point crawlers at a redirect.
+
+  Only <loc> and <lastmod> are used. <priority> and <changefreq> are ignored by Google
+  and have been since 2023, and a sitemap full of invented weekly/0.8 values is noise
+  that makes the honest <lastmod> values harder to trust.
+
+  WHAT IS DELIBERATELY ABSENT:
+
+  /predict and /batch require a verified account. A crawler reaching them sees a
+  sign-in prompt, not the instrument, so listing them would offer thin content under a
+  promising URL. The overview at / describes and links to both. If the predictor should
+  rank in its own right, the fix is a public landing page that explains it, not a
+  sitemap entry for a page the crawler cannot use.
+
+  /login, /register, /verify-email, /forgot-password, /reset-password, /dashboard/* and
+  /admin are account machinery with nothing to index, and robots.txt disallows them.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- The overview: the problem, the instrument, the method, results and limits in one
+       scroll. The canonical entry point for the whole study. -->
+  <url>
+    <loc>https://www.inhibiepdt.com/</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+
+  <!-- How the corpus was built and the models were trained and evaluated: the three
+       source databases, harmonisation, the partitioning schemes, the leakage control. -->
+  <url>
+    <loc>https://www.inhibiepdt.com/method</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+
+  <!-- The benchmark across fifteen configurations, the ablation, and the two honest
+       figures: R2 0.461 grouped by molecule, 0.398 on an unseen scaffold. -->
+  <url>
+    <loc>https://www.inhibiepdt.com/results</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+
+  <!-- Where the model fails and should not be trusted: the subgroups with no explained
+       variance, the width of the interval, the unexecuted nested cross-validation. -->
+  <url>
+    <loc>https://www.inhibiepdt.com/limits</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+
+  <!-- The figures from the executed research run, with their captions. -->
+  <url>
+    <loc>https://www.inhibiepdt.com/figures</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+
+  <!-- How to cite the research, the software and a specific prediction, with the
+       reproducibility block read from the running service. The page most likely to be
+       linked from other work, and the one that most needs to be findable. -->
+  <url>
+    <loc>https://www.inhibiepdt.com/cite</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+
+  <!-- The redacted public feed of recently served predictions. Listed because it is
+       public and linked from the masthead; its content changes continuously, so the
+       lastmod below is the date the page itself last changed, not its data. -->
+  <url>
+    <loc>https://www.inhibiepdt.com/history</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+
+</urlset>

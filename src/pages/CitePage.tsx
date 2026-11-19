@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import type { ModelInfo } from '@/lib/api'
-import { ATTRIBUTION, PERFORMANCE, PRODUCT_NAME, THESIS_TITLE } from '@/lib/constants'
+import { ATTRIBUTION, PERFORMANCE, PRODUCT_NAME, SOURCE_DATASETS, THESIS_TITLE } from '@/lib/constants'
 import type { Translations } from '@/i18n/config'
 import { Section } from '@/components/Shell'
 
@@ -116,23 +116,28 @@ Model artefact SHA-256: ${hash}.`
       </Section>
 
       <Section tone="sunk" eyebrow={t.cite.dataEyebrow} title={t.cite.dataTitle} lead={t.cite.dataBody}>
-        <div className="panel p-6 sm:p-7" style={{ borderColor: '#c08a2e' }}>
-          <h3 className="patch-label mb-3" style={{ color: '#c08a2e' }}>
-            {t.cite.dataGapTitle}
-          </h3>
-          <p className="max-w-2xl text-sm leading-relaxed text-ink-2">{t.cite.dataGapBody}</p>
-        </div>
-
-        <ul className="mt-6 grid gap-px bg-rule sm:grid-cols-3">
-          {[
-            { name: 'Inhibitor 1368', note: t.cite.dsInhibitor },
-            { name: 'DataCor (aluminium)', note: t.cite.dsDatacor },
-            { name: 'Excorr', note: t.cite.dsExcorr },
-          ].map((dataset) => (
+        <ul className="grid gap-px bg-rule sm:grid-cols-3">
+          {SOURCE_DATASETS.map((dataset) => (
             <li key={dataset.name} className="bg-card p-6">
               <h4 className="font-display text-base font-700">{dataset.name}</h4>
-              <p className="mt-2 text-sm leading-relaxed text-ink-2">{dataset.note}</p>
-              <p className="patch-label mt-4 text-ink-3">{t.cite.citationPending}</p>
+              <p className="mt-2 text-sm leading-relaxed text-ink-2">
+                {dataset.name === 'Inhibitor 1368'
+                  ? t.cite.dsInhibitor
+                  : dataset.name === 'CORDATA'
+                    ? t.cite.dsCordata
+                    : t.cite.dsExcorr}
+              </p>
+              <p className="mt-4 text-xs leading-relaxed text-ink-3">{dataset.reference}</p>
+              {dataset.url && (
+                <a
+                  className="mt-2 inline-block break-all font-mono text-xs underline"
+                  href={dataset.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {dataset.url}
+                </a>
+              )}
             </li>
           ))}
         </ul>

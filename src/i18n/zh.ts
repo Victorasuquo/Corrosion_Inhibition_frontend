@@ -171,7 +171,7 @@ export const zh: Translations = {
     title: '效率取决于条件，因此模型必须知道条件。',
     lead: '多数已发表的结构—性质模型仅凭分子结构进行预测，而它们所依据的效率却取决于温度、浓度、时长与基体。本项目将这些条件贯穿始终并交给模型。这一决定本身就是研究内容。',
     s1h: '三套数据集，一个统一模式',
-    s1p: 'Inhibitor 1368, the DataCor aluminium set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',  // TODO(i18n)
+    s1p: 'Inhibitor 1368, the ExCorr multi-metal set and the CORDATA multi-metal export, harmonised onto one 15-field schema with SMILES canonicalised, salts stripped, and the measurement techniques mapped onto a controlled vocabulary.',  // TODO(i18n)
     s2h: '去重但不丢弃条件',
     s2p: 'An earlier pipeline averaged each molecule across every condition, collapsing thousands of rows to 717. Keying on molecule, metal, temperature, duration, concentration and pH instead preserves distinct measurements — 8,359 of them, over 1,050 molecules on four base metals.',  // TODO(i18n)
     s3h: '283 features',  // TODO(i18n)
@@ -359,7 +359,7 @@ export const zh: Translations = {
     dataGapBody: '这三套数据集的原始出版物尚未确认，因此此处不印出任何参考文献，以免印出可能有误的一条。若你使用该语料，请将每套数据集追溯至其源出版物并直接引用。',
     dsInhibitor:
       '1,364 entries for carbon steel in 1 M HCl, with quantum-chemical descriptors.',  // TODO(i18n)
-    dsDatacor:
+    dsCordata:
       'The CORDATA multi-metal export: 5,000 rows across seventeen fields, covering aluminium, copper, iron, magnesium and zinc, with per-row conditions.',  // TODO(i18n)
     dsExcorr:
       '4,616 entries spanning iron, aluminium, magnesium, copper and zinc.',  // TODO(i18n)

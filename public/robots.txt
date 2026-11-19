@@ -1,0 +1,32 @@
+# robots.txt for inhibiepdt.com
+#
+# The research record is meant to be found and cited, so the public pages are open to
+# everyone. What is disallowed below is account machinery and gated tooling: pages that
+# would waste a crawler's budget and present a sign-in form as if it were content.
+#
+# Disallow is a crawling instruction, not an access control. Everything genuinely
+# private is enforced by the API, which requires a verified session.
+
+User-agent: *
+
+# Account machinery. Nothing to index, and /verify-email and /reset-password carry
+# single-use tokens in the query string that should not end up in a search index.
+Disallow: /login
+Disallow: /register
+Disallow: /verify-email
+Disallow: /forgot-password
+Disallow: /reset-password
+
+# Signed-in areas. A crawler only ever sees the sign-in redirect.
+Disallow: /dashboard
+Disallow: /admin
+
+# The predictor and batch screening require a verified account, so a crawler reaching
+# them finds a sign-in prompt rather than the instrument. The overview at / describes
+# both and is indexed in their place.
+Disallow: /predict
+Disallow: /batch
+
+Allow: /
+
+Sitemap: https://www.inhibiepdt.com/sitemap.xml

@@ -274,8 +274,12 @@ export const recentPredictionsSchema = z.object({
       interval_high: z.number(),
       ad_verdict: z.string(),
       max_tanimoto: z.number(),
-      scaffold_in_training: z.union([z.boolean(), z.number()]).optional(),
-      source: z.string().optional(),
+      // nullable, not merely optional: the public feed redacts this field and sends an
+      // explicit null, and in Zod .optional() admits undefined but rejects null. Every
+      // other redacted field above is already nullable; this one was not, so a single
+      // null failed the whole response and the page reported the service unreachable.
+      scaffold_in_training: z.union([z.boolean(), z.number()]).nullable().optional(),
+      source: z.string().nullable().optional(),
     }),
   ),
 })
